@@ -153,17 +153,21 @@ $ vi my.cnf
 my.cnf examples are in the same directory. 
 ```
 
-9. Shut down and restart the MySQL server:
+- Shut down and restart the MySQL server:
 
 ```bash
 $ ./bin/mysqladmin -uroot -p shutdown
-$ ./bin/mysqld_safe --defaults-file=/home/lbh/my.cnf
 ```
 
-10. You can shut down the server using the below command:
+or if you want to kill all mysqld server
 
 ```bash
-$ ./bin/mysqladmin -uroot -p shutdown
+$ killall mysqld
+```
+
+restart server with my.cnf
+```bash
+$ ./bin/mysqld_safe --defaults-file=/home/lbh/my.cnf
 ```
 
 ## How to install tpcc-mysql
@@ -230,7 +234,7 @@ done
 $ sudo chmod 777 load.sh
 ```
 
-5. Load data:
+- Load data:
 
 ```bash
 $ ./load.sh tpcc1000 1000
@@ -264,7 +268,7 @@ if you want to save TPC-C output, run below command.
 $ ./tpcc_start -h127.0.0.1 -S/tmp/mysql.sock -dtpcc1000 -uroot -pyourPassword -w100 -c32 -r10 -l1200 |tee /home/lbh/result/tpcc.txt
 ```
 
-### Output
+### TPC-C Result
 
 With the defined interval (`-i` option), the tool will produce the following output:
 
