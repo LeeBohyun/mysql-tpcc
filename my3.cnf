@@ -1,0 +1,62 @@
+#
+# The MySQL database server configuration file.
+#
+[client]
+user    = root
+port    = 3306
+socket  = /tmp/mysql.sock
+
+[mysql]
+prompt  = \u:\d>\_
+
+[mysqld_safe]
+socket  = /tmp/mysql.sock
+
+[mysqld]
+# Basic settings
+default-storage-engine = innodb
+pid-file        = /home/lbh/test_data/mysql.pid
+socket          = /tmp/mysql.sock
+port            = 3306
+datadir         = /home/lbh/test_data/
+log-error       = /home/lbh/test_data/mysql_error.log
+#moniter splits
+innodb_monitor_enable = module_index
+
+#
+# Innodb settings
+#
+# Page size
+innodb_page_size=4KB
+
+# file-per-table ON
+innodb_file_per_table=1
+
+# Buffer settings
+innodb_buffer_pool_size=5G
+innodb_buffer_pool_instances=8
+innodb_lru_scan_depth=1024
+
+# Transaction log settings
+innodb_log_file_size=1G
+innodb_log_files_in_group=3
+innodb_log_buffer_size=32M
+
+# Log group path (iblog0, iblog1)
+innodb_log_group_home_dir=/home/lbh/test_log/tuned/
+
+# Flush settings
+# 0: every 1 seconds, 1: fsync on commits, 2: writes on commits
+innodb_flush_log_at_trx_commit=0
+innodb_flush_neighbors=0
+innodb_flush_method=O_DIRECT
+#o_direct = without going through os cache
+#fsync = going through os cache before going to data dir
+
+# Doublewrite buffer ON
+innodb_doublewrite=ON
+
+# Asynchronous I/O control
+innodb_use_native_aio=true
+
+

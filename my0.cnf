@@ -1,0 +1,38 @@
+#
+# The MySQL database server configuration file.
+#
+[client]
+user    = root
+port    = 3306
+socket  = /tmp/mysql.sock
+
+[mysql]
+prompt  = \u:\d>\_
+
+[mysqld_safe]
+port    = 3306
+socket  = /tmp/mysql.sock
+
+[mysqld]
+# Basic settings
+default-storage-engine = innodb
+pid-file        = /home/lbh/test_data/mysql.pid
+socket          = /tmp/mysql.sock
+port            = 3306
+datadir         = /home/lbh/test_data/
+log-error       = /home/lbh/test_data/mysql_error.log
+innodb_monitor_enable = module_index
+
+# Log group path (iblog0, iblog1)
+innodb_log_group_home_dir=/home/lbh/test_log/org/
+
+# Buffer settings
+innodb_buffer_pool_size=5G
+innodb_buffer_pool_instances=8
+innodb_lru_scan_depth=1024
+
+# Flush settings
+# 0: every 1 seconds, 1: fsync on commits, 2: writes on commits
+innodb_flush_method=O_DIRECT
+#O_DIRECT: not using OS cache(prevent double buffering ->efficient memory use)
+
