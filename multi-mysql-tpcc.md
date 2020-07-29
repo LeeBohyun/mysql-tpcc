@@ -150,62 +150,7 @@ For multiple tpcc testing, each test basedir should have different port(`3307`),
 ```bash
 $ vi my.cnf
 
-#
-# The MySQL database server configuration file.
-#
-[client]
-user    = root
-port    = 3306
-socket  = /tmp/mysql.sock
-
-[mysql]
-prompt  = \u:\d>\_
-
-[mysqld_safe]
-socket  = /tmp/mysql.sock
-
-[mysqld]
-# Basic settings
-default-storage-engine = innodb
-pid-file        = /path/to/datadir/mysql.pid
-socket          = /tmp/mysql.sock
-port            = 3306
-datadir         = /path/to/datadir/
-log-error       = /path/to/datadir/mysql_error.log
-
-#
-# Innodb settings
-#
-# Page size
-innodb_page_size=16KB
-
-# file-per-table ON
-innodb_file_per_table=1
-
-# Buffer settings
-innodb_buffer_pool_size=2G
-innodb_buffer_pool_instances=8
-innodb_lru_scan_depth=1024
-
-# Transaction log settings
-innodb_log_file_size=500M
-innodb_log_files_in_group=3
-innodb_log_buffer_size=32M
-
-# Log group path (iblog0, iblog1)
-innodb_log_group_home_dir=/path/to/logdir/
-
-# Flush settings
-# 0: every 1 seconds, 1: fsync on commits, 2: writes on commits
-innodb_flush_log_at_trx_commit=0
-innodb_flush_neighbors=0
-innodb_flush_method=O_DIRECT
-
-# Doublewrite buffer ON
-innodb_doublewrite=ON
-
-# Asynchronous I/O control
-innodb_use_native_aio=true
+my.cnf examples are in the same directory. 
 ```
 
 9. Shut down and restart the MySQL server:
@@ -238,6 +183,8 @@ $ cd tpcc-mysql/src
 $ make
 ```
 
+### Load TPC-C data
+
 - Create a database for TPC-C test. 
 
 ```bash
@@ -246,8 +193,8 @@ $./bin/mysqld_safe --defaults-file=/home/lbh/my.cnf
 
 [terminal session 2]
 $ ./bin/mysql -u root -p -e "CREATE DATABASE tpcc1000;"
-$ ./bin/mysql -u root -p tpcc1000 < /path/to/tpcc-mysql/create_table.sql
-$ ./bin/mysql -u root -p tpcc1000 < /path/to/tpcc-mysql/add_fkey_idx.sql
+$ ./bin/mysql -u root -p tpcc1000 < /home/lbh/mysql-5.7.24/tpcc-mysql/create_table.sql
+$ ./bin/mysql -u root -p tpcc1000 < /home/lbh/mysql-5.7.24/tpcc-mysql/add_fkey_idx.sql
 ```
 -Change `load.sh`:
 Before running the script, change `LD_LIBRARY_PATH` and enter `yourPassword` in the `load.sh` file:
@@ -257,13 +204,28 @@ $ cd tpcc-mysql
 $ vi load.sh
 
 export LD_LIBRARY_PATH=/home/lbh/mysql-5.7.24/lib
-...
-./tpcc_load -h $HOST -d $DBNAME -u root -p "yourPassword" -w $WH -l 1 -m 1 -n $WH >> 1.out &
-...
-./tpcc_load -h $HOST -d $DBNAME -u root -p "yourPassword" -w $WH -l 2 -m $x -n $(( $x + $STEP - 1 ))  >> 2_$x.out &
-./tpcc_load -h $HOST -d $DBNAME -u root -p "yourPassword" -w $WH -l 3 -m $x -n $(( $x + $STEP - 1 ))  >> 3_$x.out &
-./tpcc_load -h $HOST -d $DBNAME -u root -p "yourPassword" -w $WH -l 4 -m $x -n $(( $x + $STEP - 1 ))  >> 4_$x.out &
-...
+DBNAME=$1
+WH=$2
+HOST=127.0.0.1
+STEP=100
+
+./tpcc_load -h $HOST -d $DBNAME -u root -p "evia6587" -P3306 -w $WH -l 1 -m 1 -n $WH >> 1.out &
+x=1
+
+while [ $x -le $WH ]
+do
+ echo $x $(( $x + $STEP - 1 ))
+./tpcc_load -h $HOST -d $DBNAME -u root -p "evia6587" -P3306 -w $WH -l 2 -m $x -n $(( $x + $STEP - 1 ))  >> 2_$x.out &
+./tpcc_load -h $HOST -d $DBNAME -u root -p "evia6587" -P3306 -w $WH -l 3 -m $x -n $(( $x + $STEP - 1 ))  >> 3_$x.out &
+./tpcc_load -h $HOST -d $DBNAME -u root -p "evia6587" -P3306 -w $WH -l 4 -m $x -n $(( $x + $STEP - 1 ))  >> 4_$x.out &
+ x=$(( $x + $STEP ))
+done
+
+for pid in `jobs -p`
+do
+	echo wait for $pid
+	wait $pid
+done
 
 $ sudo chmod 777 load.sh
 ```
@@ -276,10 +238,12 @@ $ ./load.sh tpcc1000 1000
 
 In this case, database size is about 100 GB (= 1000 warehouses).
 
-6. After loading, run tpcc-mysql test:
+### Run TPC-C benchmark
+
+- Go to tpcc-mysql directory and run `./tpcc_start` program.
 
 ```bash
-$ ./tpcc_start -h127.0.0.1 -S/tmp/mysql.sock -dtpcc100 -uroot -pyourPassword -w100 -c32 -r10 -l1200
+$ ./tpcc_start -h127.0.0.1 -S/tmp/mysql.sock -dtpcc1000 -uroot -pyourPassword -w100 -c32 -r10 -l1200
 ```
 
 It means:
@@ -294,6 +258,11 @@ It means:
 - Rampup time: 10 (sec)
 - Measure: 1200 (sec)
 
+if you want to save TPC-C output, run below command.
+
+```bash
+$ ./tpcc_start -h127.0.0.1 -S/tmp/mysql.sock -dtpcc1000 -uroot -pyourPassword -w100 -c32 -r10 -l1200 |tee /home/lbh/result/tpcc.txt
+```
 
 ### Output
 
