@@ -6,7 +6,7 @@
 
 Before running tpcc benchmark, cleaning your device would be necessary for fair testing.
 
-- initialize: below command line fills the whole device with zero, `status=progress` shows job progress. I recommend you to do this twice for perfect initalization.
+- Initialize: below command line fills the whole device with `zero`(`random` also possible), `status=progress` shows job progress. I recommend you to do this twice for perfect initalization.
 
 ```bash
 $ sudo dd if=/dev/zero of=/dev/sda status=progress
@@ -80,62 +80,50 @@ $ sudo apt-get install build-essential cmake libncurses5 libncurses5-dev bison
 
 ### Build and install
 
-1. Download the source code of [MySQL 5.7 Community Server](https://dev.mysql.com/downloads/mysql/5.7.html#downloads) using `wget`:
+- Download the source code of [MySQL 5.7 Community Server](https://dev.mysql.com/downloads/mysql/5.7.html#downloads):
 
 ```bash
-$ wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.27.tar.gz
+$ wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.24.tar.gz
 ```
 
-2. Extract the `mysql-5.7.27.tar.gz` file:
+- Extract the `mysql-5.7.24.tar.gz` file:
 
 ```bash
-$ tar -xvzf mysql-5.7.27.tar.gz
+$ tar -xvzf mysql-5.7.24.tar.gz
 $ cd mysql-5.7.27
 ```
 
-3. In MySQL 5.7, the Boost library is required to build MySQL. Therefore, download it first:
+- Download BOOST library to build MySQL:
 
 ```bash
-$ cmake -DDOWNLOAD_BOOST=ON -DWITH_BOOST=/path/to/download/boost -DCMAKE_INSTALL_PREFIX=/path/to/dir
+$ cmake -DDOWNLOAD_BOOST=ON -DWITH_BOOST=/home/lbh/mysql-5.7.24 -DCMAKE_INSTALL_PREFIX=/home/lbh/mysql-5.7.24
 ```
 
-If you already have the Boost library, change the default installation directory:
-
-```bash
-$ cmake -DWITH_BOOST=/path/to/boost -DCMAKE_INSTALL_PREFIX=/path/to/dir
-```
-
-4. Then build and install the source code:
+- Build and install the source code:
 (8: # of cores in your machine)
 
 ```bash
 $ make -j8 install
 ```
 
-5. `mysqld --initialize` handles initialization tasks that must be performed before the MySQL server, mysqld, is ready to use:
-
-- `--datadir` : the path to the MySQL data directory (e.g., `/home/mijin/test_data`)
-- `--basedir` : the path to the MySQL installation directory (e.g., `/home/mijin/mysql-5.7.24`)
+- MySQL initialization:
+`mysqld --initialize` handles initialization tasks that must be performed before the MySQL server, mysqld, is ready to use.
+`datadir` and `logdir` must be empty for initialization.
 
 ```bash
-$ ./bin/mysqld --initialize --user=mysql --datadir=/path/to/datadir --basedir=/path/to/basedir
+$ ./bin/mysqld --initialize --user=mysql --datadir=/home/lbh/test_data --basedir=/home/lbh/mysql-5.7.24
+
+or if you want to change innodb_page_size to 4k
+$ ./bin/mysqld --initialize --innodb_page_size=4k --user=mysql --datadir=/home/lbh/test_data --basedir=/home/lbh/mysql-5.7.24
 ```
 
-If you want to change the page size to 4K (default: 16K), add the `innodb_page_size` parameter. For example:
+- Set the MySQL root password:
 
 ```bash
-$ ./bin/mysqld --initialize --innodb_page_size=4k --user=mysql --datadir=/path/to/datadir --basedir=/path/to/basedir
-```
-
-6. Reset the root password:
-
-```bash
-$ ./bin/mysqld_safe --skip-grant-tables --datadir=/path/to/datadir
-
+$ ./bin/mysqld_safe --defaults-file=/home/lbh/my.cnf --skip-grant-tables --datadir=/home/lbh/test_data
 $ ./bin/mysql -uroot
 
 root:(none)> use mysql;
-
 root:mysql> update user set authentication_string=password('yourPassword') where user='root';
 root:mysql> flush privileges;
 root:mysql> quit;
@@ -146,19 +134,19 @@ root:mysql> set password = password('yourPassword');
 root:mysql> quit;
 ```
 
-7. Open `.bashrc` and add MySQL to your path:
+- Open `.bashrc` and add MySQL to your path by below lines:
 
 ```bash
 $ vi ~/.bashrc
 
-export PATH=/path/to/basedir/bin:$PATH
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/basedir/lib/
+export PATH=/home/lbh/mysql-5.7.24/bin:$PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/lbh/mysql-5.7.24/lib/
 
 $ source ~/.bashrc
 ```
 
-8. Modify the configuration file (`my.cnf` in your `/path/to/datadir`) for your purpose. For example, create or modify the contents of the configuration file as follows:
-
+- Modify the configuration file (`my.cnf`) for your purpose:
+For multiple tpcc testing, each test basedir should have different port(`3307`), socket number(`/tmp/mysql.sock1`).
 ```bash
 $ vi my.cnf
 
@@ -223,52 +211,52 @@ innodb_use_native_aio=true
 9. Shut down and restart the MySQL server:
 
 ```bash
-$ ./bin/mysqladmin -uroot -pyourPassword shutdown
-$ ./bin/mysqld_safe --defaults-file=/path/to/my.cnf
+$ ./bin/mysqladmin -uroot -p shutdown
+$ ./bin/mysqld_safe --defaults-file=/home/lbh/my.cnf
 ```
 
 10. You can shut down the server using the below command:
 
 ```bash
-$ ./bin/mysqladmin -uroot -pyourPassword shutdown
+$ ./bin/mysqladmin -uroot -p shutdown
 ```
 
 ## How to install tpcc-mysql
 
 ### Installation
 
-1. Clone tpcc-mysql from [Percona GitHub repositories](https://github.com/Percona-Lab/tpcc-mysql):
+- Clone tpcc-mysql from [Percona GitHub repositories](https://github.com/Percona-Lab/tpcc-mysql):
 
 ```bash
 $ git clone https://github.com/Percona-Lab/tpcc-mysql.git
 ```
 
-2. Go to the tpcc-mysql directory and build binaries:
+- Go to the tpcc-mysql directory and build binaries:
 
 ```bash
 $ cd tpcc-mysql/src
 $ make
 ```
 
-3. Before running the benchmark, you should create a database for TPC-C test. Go to the MySQL base directory and run following commands:
+- Create a database for TPC-C test. 
 
 ```bash
-[session 1]
-$./bin/mysqld_safe --defaults-file=/path/to/my.cnf
+[terminal session 1]
+$./bin/mysqld_safe --defaults-file=/home/lbh/my.cnf
 
-[session 2]
-$ ./bin/mysql -u root -p -e "CREATE DATABASE tpcc100;"
-$ ./bin/mysql -u root -p tpcc100 < /path/to/tpcc-mysql/create_table.sql
-$ ./bin/mysql -u root -p tpcc100 < /path/to/tpcc-mysql/add_fkey_idx.sql
+[terminal session 2]
+$ ./bin/mysql -u root -p -e "CREATE DATABASE tpcc1000;"
+$ ./bin/mysql -u root -p tpcc1000 < /path/to/tpcc-mysql/create_table.sql
+$ ./bin/mysql -u root -p tpcc1000 < /path/to/tpcc-mysql/add_fkey_idx.sql
 ```
-
-4. Then go back to the tpcc-mysql directory and load data. Before running the script, change `LD_LIBRARY_PATH` and enter `yourPassword` in the `load.sh` file:
+-Change `load.sh`:
+Before running the script, change `LD_LIBRARY_PATH` and enter `yourPassword` in the `load.sh` file:
 
 ```bash
 $ cd tpcc-mysql
 $ vi load.sh
 
-export LD_LIBRARY_PATH=/path/to/basedir/lib
+export LD_LIBRARY_PATH=/home/lbh/mysql-5.7.24/lib
 ...
 ./tpcc_load -h $HOST -d $DBNAME -u root -p "yourPassword" -w $WH -l 1 -m 1 -n $WH >> 1.out &
 ...
@@ -276,15 +264,17 @@ export LD_LIBRARY_PATH=/path/to/basedir/lib
 ./tpcc_load -h $HOST -d $DBNAME -u root -p "yourPassword" -w $WH -l 3 -m $x -n $(( $x + $STEP - 1 ))  >> 3_$x.out &
 ./tpcc_load -h $HOST -d $DBNAME -u root -p "yourPassword" -w $WH -l 4 -m $x -n $(( $x + $STEP - 1 ))  >> 4_$x.out &
 ...
+
+$ sudo chmod 777 load.sh
 ```
 
 5. Load data:
 
 ```bash
-$ ./load.sh tpcc100 100
+$ ./load.sh tpcc1000 1000
 ```
 
-In this case, database size is about 10 GB (= 100 warehouses).
+In this case, database size is about 100 GB (= 1000 warehouses).
 
 6. After loading, run tpcc-mysql test:
 
