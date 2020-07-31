@@ -287,3 +287,20 @@ Where:
 - `99%: 18.738:` - The 99% Response time of New Order transactions per given interval. In this case it is 18.738 sec
 - `max_rt: 213.169:` - The Max Response time of New Order transactions per given interval. In this case it is 213.169 sec
 - `12919|98.778, 1292|101.096, 1293|443.955, 1293|670.842` - throughput and max response time for the other kind of transactions and can be ignored
+
+
+###Sysbench 
+
+- load:
+```bash
+sysbench --test=/home/lbh/sysbench-1.0.12/sysbench/tests/oltp_legacy/oltp.lua --mysql-host=localhost  --mysql-db=sbtest --mysql-user=root --mysql-password=evia6587 --max-requests=0  --oltp-table-size=2000000 --max-time=600  --oltp-tables-count=200 --report-interval=10 --db-ps-mode=disable  --random-points=10 --mysql-table-engine=InnoDB --mysql-port=3306 --num-threads=128  prepare
+...
+
+- run:
+```bash
+sysbench --test=/home/lbh/sysbench-1.0.12/sysbench/tests/oltp_legacy/oltp.lua \
+        --mysql-host=localhost  --mysql-db=sbtest --mysql-user=root \
+        --max-requests=0  --oltp-table-size=2000000 --time=259200\
+        --max-time=600  --oltp-tables-count=200 --report-interval=10 \
+        --db-ps-mode=disable  --random-points=10   --mysql-table-engine=InnoDB \
+        --mysql-port=3307   --num-threads=128  run |tee /home/lbh/result/sysbench/run.txt
