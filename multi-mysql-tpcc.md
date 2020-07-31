@@ -304,3 +304,4 @@ sysbench --test=/home/lbh/sysbench-1.0.12/sysbench/tests/oltp_legacy/oltp.lua \
         --max-time=600  --oltp-tables-count=200 --report-interval=10 \
         --db-ps-mode=disable  --random-points=10   --mysql-table-engine=InnoDB \
         --mysql-port=3307   --num-threads=128  run |tee /home/lbh/result/sysbench/run.txt
+```
