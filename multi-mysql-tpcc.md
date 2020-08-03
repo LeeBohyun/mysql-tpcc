@@ -121,7 +121,7 @@ $ ./bin/mysqld --initialize --innodb_page_size=4k --user=mysql --datadir=/home/l
 
 ```bash
 $ ./bin/mysqld_safe --defaults-file=/home/lbh/my.cnf --skip-grant-tables --datadir=/home/lbh/test_data
-$ ./bin/mysql -uroot
+$ ./bin/mysql -uroot -S/tmp/mysql.sock -P3306
 
 root:(none)> use mysql;
 root:mysql> update user set authentication_string=password('yourPassword') where user='root';
@@ -165,9 +165,13 @@ or if you want to kill all mysqld server
 $ killall mysqld
 ```
 
-restart server with my.cnf
+- how to restart server with my.cnf
 ```bash
 $ ./bin/mysqld_safe --defaults-file=/home/lbh/my.cnf
+```
+- mysql connection
+```bash
+$ ./bin/mysql -uroot -pyourPassword -S/tmp/mysql.sock -P3306
 ```
 
 ## How to install tpcc-mysql
@@ -288,6 +292,9 @@ Where:
 - `max_rt: 213.169:` - The Max Response time of New Order transactions per given interval. In this case it is 213.169 sec
 - `12919|98.778, 1292|101.096, 1293|443.955, 1293|670.842` - throughput and max response time for the other kind of transactions and can be ignored
 
+### REFERENCE
+- https://github.com/Percona-Lab/tpcc-mysql
+- https://github.com/meeeejin/til
 
 ### Sysbench 
 
