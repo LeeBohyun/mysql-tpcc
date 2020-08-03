@@ -298,10 +298,5 @@ sysbench --test=/home/lbh/sysbench-1.0.12/sysbench/tests/oltp_legacy/oltp.lua --
 
 - run:
 ```bash
-sysbench --test=/home/lbh/sysbench-1.0.12/sysbench/tests/oltp_legacy/oltp.lua \
-        --mysql-host=localhost  --mysql-db=sbtest --mysql-user=root \
-        --max-requests=0  --oltp-table-size=2000000 --time=259200\
-        --max-time=600  --oltp-tables-count=200 --report-interval=10 \
-        --db-ps-mode=disable  --random-points=10   --mysql-table-engine=InnoDB \
-        --mysql-port=3307   --num-threads=128  run |tee /home/lbh/result/sysbench/run.txt
+sysbench --test=/home/lbh/sysbench-1.0.12/sysbench/tests/oltp_legacy/oltp.lua --mysql-host=localhost  --mysql-db=sbtest --mysql-user=root --mysql-password=evia6587 --max-requests=0  --oltp-table-size=2000000 --time=259200  --oltp-tables-count=200 --report-interval=10 --db-ps-mode=disable  --random-points=10 --mysql-table-engine=InnoDB --mysql-port=3307 --num-threads=128  run |tee /home/lbh/result/sb-ns.txt
 ```
