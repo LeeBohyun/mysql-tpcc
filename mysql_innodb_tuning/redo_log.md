@@ -11,7 +11,7 @@
 |page_size|  |    |   |   |
 |non-split| 83 | 3450  | 2013 | 6.2 |
 
-### Difference between default log_size
+### Difference between **default** and **log_size**
 - TPS : 1.5x
 - write/s : 2x 
 
