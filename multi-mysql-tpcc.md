@@ -1,4 +1,4 @@
-# multi tpcc-mysql testing: 
+# Multi TPC-C Testing in MySQL/INNODB: 
 
 **:warning: experiment setup based on Ubuntu 16.04.**
 
