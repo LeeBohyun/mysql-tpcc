@@ -1,6 +1,6 @@
 # Relation between InnoDB Redo Log Size and Performance
 
-**:warning: Tuning Project based on MySQL-5.7.24 and tested by TPC-C benchmark **
+:warning: Tuning Project based on MySQL-5.7.24 and tested by TPC-C benchmark 
 
 ## InnoDB Logging System
 Since InnoDB keeps the working set in memory(buffer pool), changes made by transactions will occur in volatile memory and later be flushed to disk. So in case of volatile memory failure or power loss, InnoDB uses logging system to have consistent record of data. It ensures that when a transaction is committed, data is not lost in the event of crash or power loss.
@@ -40,4 +40,3 @@ innodb_flush_neighbors=0
 ```
 ## Reference
 - https://www.percona.com/blog/2011/02/03/how-innodb-handles-redo-logging/
-- 
