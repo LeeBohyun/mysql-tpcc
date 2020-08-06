@@ -25,6 +25,7 @@ Configuring InnoDB's redo space is crucial for write-intensive workloads. With a
 - ```innodb_flush_at_trx_commit = 2```: write log buffer to log and flush about once a second 
 
 ```bash
+...
 # Transaction log settings
 innodb_log_file_size=1G
 innodb_log_files_in_group=3
@@ -37,6 +38,8 @@ innodb_log_group_home_dir=/home/lbh/test_log/org/
 # 0: every 1 seconds, 1: fsync on commits, 2: writes on commits
 innodb_flush_log_at_trx_commit=0
 innodb_flush_neighbors=0
+innodb_flush_method=O_DIRECT
+...
 ```
 ## Reference
 - https://www.percona.com/blog/2011/02/03/how-innodb-handles-redo-logging/
