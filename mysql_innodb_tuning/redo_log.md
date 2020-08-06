@@ -4,12 +4,12 @@
 
 ## TPC-C Testing Result
 
-| Option   |  TPS | READ/S | WRITE/S  | SSD WAF |
-|:----------:|-------------|-------------|-------------|-------------|
-|default| 16 | 988  | 414 | 9.3 |
-|log_size| 24 | 1104  | 743 | 8.3 |
-|page_size|  |    |   |   |
-|non-split| 83 | 3450  | 2013 | 6.2 |
+| Option   |  TPS | READ/S | WRITE/S  | 
+|:----------:|-------------|-------------|-------------|
+|default| 16 | 988  | 414 | 
+|log_size| 24 | 1104  | 743 | 
+|page_size|  |    |   |
+|non-split| 83 | 3450  | 2013 |
 
 ### Difference between **default** and **log_size**
 - TPS : 1.5x
