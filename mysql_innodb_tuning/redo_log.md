@@ -9,7 +9,7 @@ Since InnoDB keeps the working set in memory(buffer pool), changes made by trans
 The InnoDB transaction log handles REDO logging, which provides ACID(Atomic, Consistent, Durability). The transaction log keeps record of all the change that occurs to the pages inside the database. But instead of logging whole pages, InnoDB uses physicological logging by using double write buffer to ensure consistent page writes.
 
 ## How does Log File Size Affect Response Time?
-In order to keep ACID compliance, the transaction log must guarantee the logging action happens before the transaction is committed, which is known as write-ahead-logging(WAL). As the time to log is added to every update it can become an important overhead to your response time. By configuring ```innodb_flush_at_trx_commit```, we can reduce overhead by flushing less frequently.
+In order to keep ACID compliance, the transaction log must guarantee the logging action happens before the transaction is committed, which is known as write-ahead-logging(WAL). As the time to log is added to every update it can become an important overhead to your response time. Configuring ```innodb_flush_at_trx_commit``` can reduce overhead by flushing less frequently.
 
 ## How does Log File Size Affect Throughput?
 As the REDO log in InnoDB uses a fixed length circular transaction log, the speed of UPDATE is tightly linked to the speed at which check-pointing can occur. In order to insert a new record in the transaction log, InnoDB must ensure that the previously written record has been flushed to disk. This means that it can be beneficial to have very large transaction logs which allow a larger window between REDO logging and the checkpoint on disk.
@@ -26,7 +26,7 @@ In conclusion, configuring InnoDB's redo space is crucial for write-intensive wo
 
 ```bash
 ...
-# Transaction log settings
+# Transaction log settingsords to the transaction l
 innodb_log_file_size=1G
 innodb_log_files_in_group=3
 innodb_log_buffer_size=32M
@@ -42,6 +42,8 @@ innodb_flush_method=O_DIRECT
 ...
 ```
 ## TPC-C Testing Result
+
+
 
 ## Reference
 - https://www.percona.com/blog/2011/02/03/how-innodb-handles-redo-logging/
