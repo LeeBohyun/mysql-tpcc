@@ -2,19 +2,34 @@
 
 :warning: NOTIFICATION: Tuning Project based on MySQL-5.7.24 and tested by TPC-C benchmark 
 
-## InnoDB Logging System
+## TPC-C Testing Result
+
+| Option   |  TPS | READ/S | WRITE/S  | SSD WAF |
+|:----------:|-------------|-------------|-------------|-------------|
+|default| 16 | 988  | 414 | 9.3 |
+|log_size| 24 | 1104  | 743 | 8.3 |
+|page_size|  |    |   |   |
+|non-split| 83 | 3450  | 2013 | 6.2 |
+
+### Difference between default log_size
+- TPS : 1.5x
+- write/s : 2x 
+
+## Background Info 
+
+### InnoDB Logging System
 Since InnoDB keeps the working set in memory(buffer pool), changes made by transactions will occur in volatile memory and later be flushed to disk. So in case of volatile memory failure, InnoDB uses logging system to have consistent record of data in database. 
 
-## Transaction Log
+### Transaction Log
 The InnoDB transaction log handles REDO logging, which provides ACID(Atomic, Consistent, Durability). The transaction log keeps record of all the change that occurs to the pages inside the database. But instead of logging whole pages, InnoDB uses physicological logging by using double write buffer to ensure consistent page writes.
 
-## How does Log File Size Affect Response Time?
+### How does Log File Size Affect Response Time?
 In order to keep ACID compliance, the transaction log must guarantee the logging action happens before the transaction is committed, which is known as write-ahead-logging(WAL). As the time to log is added to every update it can become an important overhead to your response time. Configuring ```innodb_flush_at_trx_commit``` can reduce overhead by flushing less frequently.
 
-## How does Log File Size Affect Throughput?
+### How does Log File Size Affect Throughput?
 As the REDO log in InnoDB uses a fixed length circular transaction log, the speed of UPDATE is tightly linked to the speed at which check-pointing can occur. In order to insert a new record in the transaction log, InnoDB must ensure that the previously written record has been flushed to disk. This means that it can be beneficial to have very large transaction logs which allow a larger window between REDO logging and the checkpoint on disk.
 
-## Variable Setting in MySQL Configuration File
+### Variable Setting in MySQL Configuration File
 In conclusion, configuring InnoDB's redo space is crucial for write-intensive workloads. With additional redo log space, performance of write I/O will also increase. However, it also means longer recovery time when power loss or crash occurs. Consider these tradeoffs and add the configurations.
 
 - ```innodb_log_file_size```(default 50M)
@@ -41,9 +56,6 @@ innodb_flush_neighbors=0
 innodb_flush_method=O_DIRECT
 ...
 ```
-## TPC-C Testing Result
-
-
 
 ## Reference
 - https://www.percona.com/blog/2011/02/03/how-innodb-handles-redo-logging/
