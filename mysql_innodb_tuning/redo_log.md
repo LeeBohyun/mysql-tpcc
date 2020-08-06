@@ -3,13 +3,13 @@
 :warning: NOTIFICATION: Tuning Project based on MySQL-5.7.24 and tested by TPC-C benchmark 
 
 ## InnoDB Logging System
-Since InnoDB keeps the working set in memory(buffer pool), changes made by transactions will occur in volatile memory and later be flushed to disk. So in case of volatile memory failure or power loss, InnoDB uses logging system to have consistent record of data. It ensures that when a transaction is committed, data is not lost in the event of crash or power loss.
+Since InnoDB keeps the working set in memory(buffer pool), changes made by transactions will occur in volatile memory and later be flushed to disk. So in case of volatile memory failure, InnoDB uses logging system to have consistent record of data in database. 
 
 ## Transaction Log
 The InnoDB transaction log handles REDO logging, which provides ACID(Atomic, Consistent, Durability). The transaction log keeps record of all the change that occurs to the pages inside the database. But instead of logging whole pages, InnoDB uses physicological logging by using double write buffer to ensure consistent page writes.
 
 ## How does Log File Size Affect Response Time?
-In order to keep ACID compliance, the transaction log must guarantee the logging action happens before the transaction is committed, this is known as write-ahead-logging. This essentially means that before an update can return it must be logged. As the time to log is added to every update it can become an important overhead to your response time. Indeed if InnoDB cannot log at all, your transaction will never complete.
+In order to keep ACID compliance, the transaction log must guarantee the logging action happens before the transaction is committed, which is known as write-ahead-logging(WAL). As the time to log is added to every update it can become an important overhead to your response time. By configuring ```innodb_flush_at_trx_commit```, we can reduce overhead by flushing less frequently.
 
 ## How does Log File Size Affect Throughput?
 As the REDO log in InnoDB uses a fixed length circular transaction log, the speed of UPDATE is tightly linked to the speed at which check-pointing can occur. In order to insert a new record in the transaction log, InnoDB must ensure that the previously written record has been flushed to disk. This means that it can be beneficial to have very large transaction logs which allow a larger window between REDO logging and the checkpoint on disk.
