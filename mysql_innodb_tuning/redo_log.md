@@ -30,7 +30,7 @@ In order to keep ACID compliance, the transaction log must guarantee the logging
 As the REDO log in InnoDB uses a fixed length circular transaction log, the speed of UPDATE is tightly linked to the speed at which check-pointing can occur. In order to insert a new record in the transaction log, InnoDB must ensure that the previously written record has been flushed to disk. This means that it can be beneficial to have very large transaction logs which allow a larger window between REDO logging and the checkpoint on disk.
 
 ### Variable Setting in MySQL Configuration File
-In conclusion, configuring InnoDB's redo space is crucial for write-intensive workloads. With additional redo log space, performance of write I/O will also increase. However, it also means longer recovery time when power loss or crash occurs. Consider these tradeoffs and add the configurations.
+In conclusion, configuring InnoDB's redo space is crucial for write-intensive workloads. With additional redo log space, performance of write I/O will increase. However, it also means longer recovery time when power loss or crash occurs. Consider these tradeoffs and add the configurations.
 
 - ```innodb_log_file_size```(default 50M)
 - ```innodb_log_files_in_group```(default 2): if total log size is over 1G, you should have more than 1 for this variable.
