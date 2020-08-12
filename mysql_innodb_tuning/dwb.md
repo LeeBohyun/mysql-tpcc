@@ -22,7 +22,7 @@ Partial page writes occur when OS does not fully complete page write request. Fo
 InnoDB flushes multiple pages from InnoDB buffer pool and so the pages will be written to double write buffer sequentially. First fsync() is called to make sure they make it to the disk, and the second fsync() writes pages to their real location. During recovery phase, InnoDB checks pages inside doublewrite buffer and their real location. If page is inconsistent in the tablescpace, it is recovered from double write buffer.
 
 ### How Double Write Affects MySQL Performance
-Although double write seems to make twice overhead since each page is written twice,sequential write makes it less expensive than it looks. In typcial cases only 5 to 10 percent performance loss is expected. However if we change ```innodb_page_size``` to 4k we no longer need DWB, so in that case we can disable doublewrite changing configuration file. 
+Although double write seems to make twice overhead since each page is written twice,sequential write makes it less expensive than it looks. In typcial situation, only 5 to 10 percent performance loss is expected. However if we change ```innodb_page_size``` to 4k we no longer need DWB, so in that case we can disable doublewrite changing configuration file. 
 ### Variable Setting in MySQL Configuration File
 MySQL 5.7 comes with the option ```innodb_doublewrite```, so you can set the variable to either ```ON``` or ```OFF```.
 
