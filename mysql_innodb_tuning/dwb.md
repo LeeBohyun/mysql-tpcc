@@ -15,7 +15,7 @@
 ## Background Info 
 
 ### InnoDB DoubleWrite Buffer
-InnoDB storage has a unique feature called ***"doublewrite"***, distinct from other storages. InnoDB writes data twice when it performs table space writes, while performing write to log only once. Its purpose is to archive data safely in case of partial page writes.
+InnoDB storage engine has a unique feature called ***"doublewrite"***. InnoDB writes data twice when it performs table space writes, while performing write to log only once. Its purpose is to archive data safely in case of partial page writes.
 Partial page writes occur when OS does not fully complete page write request. For instance, out of 16k InnoDB page only first 4K are updated and remaining 12K stays in their formal state. This usually occurs in the case of power failure or OS crash.   
 
 ### How Double Write Works
