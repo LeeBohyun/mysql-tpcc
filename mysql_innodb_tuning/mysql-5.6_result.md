@@ -30,6 +30,10 @@
 |non-split| 77 | 1834  | 486 | 112 -> 112 | 186 107 |
 |**update** dwb-off | 229 | 4507  | 906 | 112 -> 113 | 300 223 |
 
-## :warning: 추가 확인사항
+## MyRocks Result
+
+| Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | 
+|:----------:|-------------|-------------|-------------|-------------|
+|default| 79 | 1303 | 8 | 158 -> 168 | 
 
 - myrocks TPC-C 결과와 비교
