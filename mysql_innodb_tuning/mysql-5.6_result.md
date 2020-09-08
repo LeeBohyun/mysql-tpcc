@@ -8,17 +8,21 @@
 
 ## MySQL-5.6  Result
 
-### free space 15%
 
 | Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | SPLIT_NUM |
 |:----------:|-------------|-------------|-------------|-------------|-------------|
 |default| 21 | 1100  | 604 | 91 -> 95 | 119 008 |
 |log_size| 21 | 1093  | 493 |  91 -> 95 | 118 180 |
 |page_size| 32 |  1427 | 1046 | 109 -> 114 | 328 762 |
+
+### free space 15%
+
+| Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | SPLIT_NUM |
+|:----------:|-------------|-------------|-------------|-------------|-------------|
 |non-split|53 |  1922 | 977 |  111 -> 116 | 470 954 |
 |dwb-off | 64 |  2298  | 1142 |  111 -> 116 | 542 317 |
 
-### **free space :warning: 20%**
+### **free space 20%**
 
 | Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | SPLIT_NUM |
 |:----------:|-------------|-------------|-------------|-------------|-------------|
