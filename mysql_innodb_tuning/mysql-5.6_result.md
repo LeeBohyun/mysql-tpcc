@@ -5,9 +5,9 @@
 - Experiment for 2h
 - warehouse 1000
 - TPC-C connection: 4
+- data device: micron crucial ssd 250G
 
 ## MySQL-5.6  Result
-
 
 | Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | SPLIT_NUM |
 |:----------:|-------------|-------------|-------------|-------------|-------------|
