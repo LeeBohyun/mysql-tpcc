@@ -44,5 +44,3 @@
 | Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | 
 |:----------:|-------------|-------------|-------------|-------------|
 |default| 79 | 1303 | 8 | 158 -> 168 | 
-
-- myrocks TPC-C 결과와 비교
