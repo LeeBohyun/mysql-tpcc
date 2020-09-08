@@ -1,4 +1,4 @@
-# MySQL/InnoDB TPC-C Result
+# MySQL/InnoDB vs MyRocks TPC-C Result
 
 ## 실험환경
 - Memory 5G
