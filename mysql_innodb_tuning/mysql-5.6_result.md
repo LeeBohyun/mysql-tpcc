@@ -7,6 +7,22 @@
 - TPC-C connection: 4
 - data device: micron crucial ssd 250G
 
+## MyRocks Result
+
+| Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | 
+|:----------:|-------------|-------------|-------------|-------------|
+|default| 79 | 1303 | 8 | 158 -> 168 | 
+
+## MySQL-5.7 Result
+
+| Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | SPLIT_NUM |
+|:----------:|-------------|-------------|-------------|-------------|-------------|
+|default| 13 | 988  | 414 | 91 -> 95 | 95 822 |
+|log_size| 21 | 1067  | 489 | 91 -> 95 | 116 756 |
+|page_size| 39 | 1485 | 829  |  109 -> 114 | 381 599 |
+|non-split| 77 | 1834  | 486 | 112 -> 112 | 186 107 |
+| dwb-off | 229 | 4507  | 906 | 112 -> 113 | 300 223 |
+
 ## MySQL-5.6  Result
 
 | Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | SPLIT_NUM |
@@ -29,19 +45,14 @@
 |**non-split** | 71 |  2525  | 1241 |  113 -> 119 | 586 674|
 |**dwb-off** | 138 |  4862  | 2418 |  113 -> 119 | 987 046|
 |**war** | 143 |  5486  | 2303|  113 -> 118 | 363 133|
+- war experiment for 30min 
 
-## MySQL-5.7 Result
+## 30min DWB-OFF VS WAR Result
+
+- experimented simultaneously
 
 | Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | SPLIT_NUM |
 |:----------:|-------------|-------------|-------------|-------------|-------------|
-|default| 13 | 988  | 414 | 91 -> 95 | 95 822 |
-|log_size| 21 | 1067  | 489 | 91 -> 95 | 116 756 |
-|page_size| 39 | 1485 | 829  |  109 -> 114 | 381 599 |
-|non-split| 77 | 1834  | 486 | 112 -> 112 | 186 107 |
-| dwb-off | 229 | 4507  | 906 | 112 -> 113 | 300 223 |
+| dwb-off | 188 | 6939  | 3109 | 113 -> 118 | 437 952 |
+|WAR| 80 | 3415  | 1346 | 113 -> 118 | 247 107 |
 
-## MyRocks Result
-
-| Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | 
-|:----------:|-------------|-------------|-------------|-------------|
-|default| 79 | 1303 | 8 | 158 -> 168 | 
