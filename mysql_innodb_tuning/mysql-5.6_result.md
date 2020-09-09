@@ -47,12 +47,4 @@
 |**war** | 143 |  5486  | 2303|  113 -> 118 | 363 133|
 - war experiment for 30min 
 
-## 30min DWB-OFF VS WAR Result
-
-- experimented simultaneously
-
-| Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | SPLIT_NUM |
-|:----------:|-------------|-------------|-------------|-------------|-------------|
-| dwb-off | 188 | 6939  | 3109 | 113 -> 118 | 437 952 |
-|WAR| 80 | 3415  | 1346 | 113 -> 118 | 247 107 |
 
