@@ -9,4 +9,7 @@ In buffer pool, there are flusher(buf0flu.cc) and doublbewrite buffer(buf0dblwr.
 
 Flusher writes dirty pages to disk in background that had been buffered in a memory area. InnoDB has limited space in redo log and buffer pool. InnoDB flushes page continuously so that it can avoid synchronous I/O as many as possible, thus keeping reserved clean or free blocks that can be replaced without having to be flushed.  
 
+## Page Cleaner Thread
+Page cleaner thread handles all types of background flushing such as flushing pages from end of LRU list and flush list.  It wakes up once per second and sometimes user thread can also handle flusing. Multiple threads are available in MySQL5.7+.
+
 ## WAR
