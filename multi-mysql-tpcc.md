@@ -38,11 +38,7 @@ $ mkdir test_log
 $ sudo mount /dev/sdc1 -o nobarrier test_log
 $ sudo chown-R lbh:lbh test_log
 ```
-In the case of the log device, we turned off the *write barrier* option to mitigate the overhead of `fsync()`. The detailed reasons are as follows:
-
-> A **write barrier** is a kernel mechanism used to ensure that file system metadata is correctly written and ordered on persistent storage, even when storage devices with volatile write caches lose power. File systems with write barriers enabled also ensure that data transmitted via `fsync()` is persistent throughout a power loss.
-> However, enabling write barriers incurs a substantial performance penalty for some applications. Specifically, applications that use `fsync()` heavily or create and delete many small files will likely run much slower.
-> For devices with non-volatile, battery-backed write caches and those with write-caching disabled, you can safely disable write barriers at mount time using the `-o nobarrier` option for mount.
+In the case of the log device, we turned off the *write barrier* option to mitigate the overhead of `fsync()`.
 
 You can check the mounted device with the below command:
 
