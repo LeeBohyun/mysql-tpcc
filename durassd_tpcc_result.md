@@ -1,6 +1,8 @@
 # MySQL/InnoDB TPC-C Result
 
-## Settings
+##  DuraSSD MySQL-5.6  Result
+
+### Settings
 
 - Memory 20G
 - Experiment for 1h
@@ -8,9 +10,6 @@
 - TPC-C connection: 4
 - data device: DuraSSD 960GB
 - DBMS: mysql-5.6.26
-
-
-## MySQL-5.6  Result
 
 | Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | SPLIT_NUM |
 |:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|
@@ -24,6 +23,8 @@
 
 
 ## Crucial Micron SSD(250G) Result
+
+### Settings
 
 - Memory 5G
 - warehouse 1000 (100GB)
