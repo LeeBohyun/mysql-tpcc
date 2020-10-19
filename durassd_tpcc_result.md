@@ -25,8 +25,11 @@
 
 ## Crucial Micron SSD(250G) Result
 
-
-## TPC-C Testing Result
+- Memory 5G
+- warehouse 1000 (100GB)
+- TPC-C connection: 4
+- data device: micron crucial SSD 250GB
+- DBMS: mysql-5.6.26 / mysql-5.7.24
 
 ### 5.7 for 72h 
 
