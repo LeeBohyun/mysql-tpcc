@@ -1,4 +1,4 @@
-9# InnoDB DoubleWrite Buffer and Performance
+# InnoDB DoubleWrite Buffer and Performance
 
 :warning: NOTIFICATION: Tuning Project based on MySQL-5.7.24 and tested by TPC-C benchmark 
 
