@@ -11,6 +11,8 @@
 - data device: DuraSSD 960GB
 - DBMS: mysql-5.6.26
 
+### Result
+
 | Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | SPLIT_NUM |
 |:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|
 |default| 84 | 2757  | 2184 | 182 -> 190 | 226 454 |
@@ -20,6 +22,20 @@
 |non-split(15%)| 319 | 6883  | 3824 | 223 -> 234 |  1212 570 |
 |non-split(20%)| 318 | 6867  | 3816 | 226 -> 237 | 1220 958 |
 |war | 321 | 6920 |3839 | 226 -> 237| 1227 888|
+
+### Settings
+
+- Memory 20G
+- Experiment for 1h
+- warehouse 5000 (500GB)
+- TPC-C connection: 4
+- data device: DuraSSD 960GB
+- DBMS: mysql-5.6.26
+
+| Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | SPLIT_NUM |
+|:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|
+|page_size (4k)| 176 | 8596 | 3415 |  548 -> 569 | 1110 343 |
+|non-split(20%)| 174 | 8405 | 3346 | 567 -> 590 | 1121 153 |
 
 
 ## Crucial Micron SSD(250G) Result
