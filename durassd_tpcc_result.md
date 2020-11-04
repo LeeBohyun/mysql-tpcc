@@ -32,6 +32,8 @@
 - data device: DuraSSD 960GB
 - DBMS: mysql-5.6.26
 
+### Result
+
 | Option   |  TPS | READ/S | WRITE/S  | INCREASED STORAGE | SPLIT_NUM |
 |:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|
 |page_size (4k)| 176 | 8596 | 3415 |  548 -> 569 | 1110 343 |
