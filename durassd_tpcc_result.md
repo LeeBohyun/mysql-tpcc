@@ -39,6 +39,10 @@
 |page_size (4k)| 176 | 8596 | 3415 |  548 -> 569 | 1110 343 |
 |non-split(20%)| 174 | 8405 | 3346 | 567 -> 590 | 1121 153 |
 
+### Plan:
+- need SSD initialization
+- **compare 15% free space and 4k # of delivery transaction.
+- 
 
 ## Crucial Micron SSD(250G) Result
 
