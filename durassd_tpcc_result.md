@@ -42,7 +42,10 @@
 ### Plan:
 - need SSD initialization
 - **compare 15% free space and 4k # of delivery transaction.
-- 
+- **compare free buffer wait of 4k, ns, and war
+
+## COMPARE ORDER-LINE SPLIT
+
 
 ## Crucial Micron SSD(250G) Result
 
