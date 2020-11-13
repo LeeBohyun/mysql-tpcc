@@ -60,12 +60,12 @@
 ### COMPARE FREE BUFFER-WAIT
 |buf0lru.cc|4k  |+nonsplit(15%) |+war |
 |:----------:|:-------------:|:-------------:|:-------------:|
-|clean page|||623 985| 
-|spf mode|||0|
-|background wait|||0|
-|try to get block|||32 843 417|
-|free block|||32 198 730|
-|no block|||667 662|
+|clean page||214 062|623 985| 
+|spf mode||0|0|
+|background wait||0|0|
+|try to get block||30 997 392|32 843 417|
+|free block||30 783 552|32 198 730|
+|no block||214 062|667 662|
 ## Crucial Micron SSD(250G) Result
 
 ### Settings
