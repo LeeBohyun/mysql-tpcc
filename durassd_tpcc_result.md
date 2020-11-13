@@ -41,12 +41,31 @@
 
 ### Plan:
 - need SSD initialization
-- **compare 15% free space and 4k # of delivery transaction.
-- **compare free buffer wait of 4k, ns, and war
+- compare 15% free space and 4k # of **delivery transaction** : delivery transaction split confirmed.  
+- **compare free buffer wait of 4k, ns, and war**
 
-## COMPARE ORDER-LINE SPLIT
+### COMPARE ORDER-LINE SPLIT
 
+| Split type   |  **ORG(6.25%)** | **TUNED(15%)** |
+|:----------:|:-------------:|:-------------:|
+|66 byte (delivery transaction)| 9863 | 0 | 
+|61 byte (new order transaction)| 241 475 | 253 714  | 
+|24 byte (internal)| 958 |  949 | 
+|20 byte (fkey_order_line_2)| 88 793 | 83 018  | 
+|18 byte (internal)| 21741 |  21 210 | 
+|total Order-Line split#| 362 830 | 358 891|
+|storage change | 219 -> 229 |224 ->234 |
+|TPS | 355 | 336 |
 
+### COMPARE FREE BUFFER-WAIT
+|buf0lru.cc|4k  |+nonsplit(15%) |+war |
+|:----------:|:-------------:|:-------------:|:-------------:|
+|clean page|||623 985| 
+|spf mode|||0|
+|background wait|||0|
+|try to get block|||32 843 417|
+|free block|||32 198 730|
+|no block|||667 662|
 ## Crucial Micron SSD(250G) Result
 
 ### Settings
