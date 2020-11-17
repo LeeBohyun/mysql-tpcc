@@ -106,11 +106,17 @@ $ make -j8 install
 `mysqld --initialize` handles initialization tasks that must be performed before the MySQL server, mysqld, is ready to use.
 `datadir` and `logdir` must be empty for initialization.
 
+- for mysql-5.7:
+
 ```bash
 $ ./bin/mysqld --initialize --user=mysql --datadir=/home/lbh/test_data --basedir=/home/lbh/mysql-5.7.24
 
 or if you want to change innodb_page_size to 4k
 $ ./bin/mysqld --initialize --innodb_page_size=4k --user=mysql --datadir=/home/lbh/test_data --basedir=/home/lbh/mysql-5.7.24
+```
+- for mysql-5.6:
+```bash
+$ scripts/mysql_install_db --user=mysql --defaults-file=/home/lbh/scripts/my1.cnf
 ```
 
 - Set the MySQL root password:
