@@ -44,7 +44,7 @@
 - compare 15% free space and 4k # of **delivery transaction** : delivery transaction split confirmed.  
 - **compare free buffer wait of 4k, ns, and war**
 
-### COMPARE ORDER-LINE SPLIT
+### ORDER-LINE SPLIT Result
 
 | Split type   |  **ORG(6.25%)** | **TUNED(15%)** |
 |:----------:|:-------------:|:-------------:|
@@ -57,53 +57,79 @@
 |storage change | 219 -> 229 |224 ->234 |
 |TPS | 355 | 336 |
 
-### COMPARE FREE BUFFER-WAIT
-|buf0lru.cc|4k  |+nonsplit(15%) |+war |
-|:----------:|:-------------:|:-------------:|:-------------:|
-|clean page||214 062|623 985| 
-|spf mode||0|0|
-|background wait||0|0|
-|try to get block||30 997 392|32 843 417|
-|free block||30 783 552|32 198 730|
-|no block||214 062|667 662|
-## Crucial Micron SSD(250G) Result
+### FREE BUFFER-WAIT Result
+|buf0lru.cc|16k| 4k  |+nonsplit(15%) |+war |
+|:----------:|:-------------:|:-------------:|:-------------:|:-------------:|
+|clean page|61 380|305 189|214 062|623 985| 
+|spf mode|0|0 |0|0|
+|background wait|0|0|0|0|
+|try to get block|19 315 151|34 078 760|30 997 392|32 843 417|
+|free block|19 253 771|33 760 077|30 783 552|32 198 730|
+|no block|61 380|336 698|214 062|667 662|
 
 ### Settings
+- log size: 5G
+- 2000 warehouse
+- time: 1h
+- connection : 4
+- bufferpool sz: 20G
 
-- Memory 5G
-- warehouse 1000 (100GB)
-- TPC-C connection: 4
-- data device: micron crucial SSD 250GB
-- DBMS: mysql-5.6.26 / mysql-5.7.24
 
-### 5.7 for 72h 
+my1.cnf(16k)
+```bash
+#
+# The MySQL database server configuration file.//tuning factor: redo log file size
+#
+[client]
+user    = root
+port    = 3307
+socket  = /tmp/mysql.sock1
 
-| Option   |  TPS | READ/S | WRITE/S  |Storage Change(GB)| 
-|:----------:|-------------|-------------|-------------|-------------|
-|default| 16 | 988  | 414 | 91-> 105 (14)  |
-|log_size| 24 | 1104  | 743 |  91 -> 107 (16) |
-|page_size| 38 |   1427 | 1046  |109 -> 127 (18)|
-|non-split(15%)| 83 | 3450  | 2013 | 112 -> 147 (35) | 
-|dwb-off | 137 |  4862 | 2418 | 112-> 154 | 
+[mysql]
+prompt  = \u:\d>\_
 
-### 5.7 for 2h:
+[mysqld_safe]
+port    = 3307
+socket  = /tmp/mysql.sock1
 
-| Option   |  TPS | READ/S | WRITE/S  | Storage Change(GB)| 
-|:----------:|-------------|-------------|-------------|-------------|
-|default| 13 | 679  | 440  | 91-> 95  |
-|log_size| 21 | 1067  | 489 | 91 -> 95 |
-|page_size| 39 |  1485 | 829 | 109 -> 114|
-|non-split(15%)| 77 | 1834  | 486 | 112 -> 112 | 
-|dwb-off | 183 |  3907 | 906 | 112-> 113 | 
+[mysqld]
+# Basic settings
+default-storage-engine = innodb
+pid-file        = /home/lbh/test_data/mysql.pid
+socket          = /tmp/mysql.sock1
+port            = 3307
+datadir         = /home/lbh/test_data/
+log-error       = /home/lbh/test_data/mysql_error.log
+innodb_monitor_enable = module_index
 
-### 5.6 for 2h:
+#
+# Innodb settings
+#
 
-| Option   |  TPS | READ/S | WRITE/S  | Storage Change(GB)| 
-|:----------:|-------------|-------------|-------------|-------------|
-|default| 17 | 869 | 424   | 91-> 95  |
-|log_size| 28 | 1381  | 579 | 91 -> 95 |
-|page_size| 46 |  1726 | 871 | 109 -> 114|
-|non-split| 70 | 2515 | 1241 | 113 -> 119 | 
-|dwb-off | 138 |  4862 | 2418 |112-> 119 | 
+# file-per-table ON
+innodb_file_per_table=1
 
+# Buffer settings
+innodb_buffer_pool_size=20G
+innodb_buffer_pool_instances=8
+innodb_lru_scan_depth=1024
+
+# Transaction log settings
+innodb_log_file_size=1G
+innodb_log_files_in_group=5
+innodb_log_buffer_size=32M
+
+# Log group path (iblog0, iblog1)
+innodb_log_group_home_dir=/home/lbh/test_log/org/
+
+# Doublewrite buffer ON
+innodb_doublewrite=ON
+
+# Flush settings
+# 0: every 1 seconds, 1: fsync on commits, 2: writes on commits
+innodb_flush_log_at_trx_commit=0
+innodb_flush_neighbors=0
+innodb_flush_method=O_DIRECT
+
+```
 
