@@ -22,6 +22,11 @@ $ reboot
 ```bash
 $ sudo mkfs.ext4 /dev/sda1
 ```
+- or just initialize FTL information in SSD:
+
+```bash
+$ sudo blkdiscard /dev/sdc
+```
 
 ## Mounting devices
 
