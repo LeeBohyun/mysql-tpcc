@@ -10,7 +10,7 @@
 - DBMS: mysql-5.6.26 / mysql-5.7.24
 
 
-## 5.6 for 2h: **UPDATED VER(12.21)**
+## 5.6 for 1h: **UPDATED VER(12.21)**
 
 | Option   |  TPS | READ/S | WRITE/S  | Storage Change(GB)| 
 |:----------:|-------------|-------------|-------------|-------------|
