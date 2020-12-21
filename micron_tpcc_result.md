@@ -1,16 +1,14 @@
 # Micron MySQL/TPC-C Result
 
+## 5.6 for 1h: **UPDATED VER(12.21)**
 
-## Settings
+### Settings
 
-- Memory 5G
+- Bufferpool: 5G
 - warehouse 1000 (100GB)
-- TPC-C connection: 4
+- TPC-C connection: 16
 - data device: micron crucial SSD 250GB
 - DBMS: mysql-5.6.26 / mysql-5.7.24
-
-
-## 5.6 for 1h: **UPDATED VER(12.21)**
 
 | Option   |  TPS | READ/S | WRITE/S  | Storage Change(GB)| 
 |:----------:|-------------|-------------|-------------|-------------|
