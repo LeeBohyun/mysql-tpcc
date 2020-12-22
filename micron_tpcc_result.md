@@ -10,15 +10,26 @@
 - data device: micron crucial SSD 250GB
 - DBMS: mysql-5.6.26 / mysql-5.7.24
 
+### Testing Result
+
 | Option   |  TPS | READ/S | WRITE/S  | Storage Change(GB)| 
 |:----------:|-------------|-------------|-------------|-------------|
 |default| 21 | 869 | 424   | 91-> 95  |
 |log_size| 28 | 1381  | 579 | 91 -> 95 |
-|page_size| 46 |  1726 | 871 | 109 -> 114|
-|non-split| 70 | 2515 | 1241 | 112 -> 116 | 
+|page_size(4k)| 46 |  1726 | 871 | 109 -> 113|
+|non-split(15%)| 70 | 2515 | 1241 | 112 -> 116 | 
 |war | 84 |  3152 | 1495 |112-> 116 | 
 |dwb-off | 138 |  4862 | 2418 |112-> 116 | 
 
+- nonsplit 4k 대비 tps 1.5X 증가
+- 
+
+- connection: 4
+
+| Option   |  TPS | READ/S | WRITE/S  | Storage Change(GB)| 
+|:----------:|-------------|-------------|-------------|-------------|
+|page_size(4k)| 85 |  3191 | 1520 | 109 -> 113|
+|non-split(15%)| 137 | 4850 | 2345 | 112 -> 117 | 
 
 ## 5.7 Result
 ### 5.7 for 72h:
