@@ -21,8 +21,8 @@
 |war | 79 |  3152 | 1495 |112-> 116 | 
 |dwb-off | 138 |  4862 | 2418 |112-> 116 | 
 
-- nonsplit 4k 대비 tps 1.5X 증가
-- war read IOPS 1.25X, write IOPS  1.2X 증가
+- nonsplit 4k 대비 **tps 1.5X** 증가
+- war ***read IOPS 1.25X***, ***write IOPS  1.2X*** 증가
 
 ### connection: 4
 
