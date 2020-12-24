@@ -22,7 +22,6 @@
 |dwb-off | 138 |  4862 | 2418 |112-> 116 | 
 
 - nonsplit 4k 대비 tps 1.5X 증가
-- 
 
 - connection: 4
 
