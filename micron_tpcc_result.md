@@ -26,8 +26,9 @@
 ### connection: 4
 - time: 1h
 
-| Option   |  TPS | READ/S | WRITE/S  | Storage Change(GB)| 
+| Option   |  TPS | READ/S | WRITE/S  | Storage Change(GB)|
 |:----------:|-------------|-------------|-------------|-------------|
+|default| 19 | 1063 | 557   | 91-> 95  |
 |page_size(4k)| 85 |  3191 | 1520 | 109 -> 113|
 |non-split(15%)| 137 | 4850 | 2345 | 112 -> 117 | 
 |war| 143 | 5469 | 2467 | 112 -> 117 | 
