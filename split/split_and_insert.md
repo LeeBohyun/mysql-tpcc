@@ -2,7 +2,7 @@
 
 ## One customer
 
-``bash``
+```bash
 new order insert o_id: 3007 d_id: 8, w_id: 1233, ol_number: 6, ol_i_id: 55791,ol_supply_w_id: 1233, ol_quantity: 4, ol_amount: 213.201523, ol_dist_info: lDtTKFj1sRRHgbDiKacWBiEv
 new order insert o_id: 3007 d_id: 8, w_id: 1233, ol_number: 7, ol_i_id: 63479,ol_supply_w_id: 1233, ol_quantity: 2, ol_amount: 45.745995, ol_dist_info: otqT1INTaFQLdZclrxK0dNNZ
 new order insert o_id: 3007 d_id: 8, w_id: 1233, ol_number: 8, ol_i_id: 71428,ol_supply_w_id: 1233, ol_quantity: 2, ol_amount: 176.012482, ol_dist_info: QUrcmuFzp4su6s4LNPtdyEau
@@ -698,4 +698,4 @@ new order insert o_id: 3007 d_id: 2, w_id: 726, ol_number: 5, ol_i_id: 25605,ol_
 new order insert o_id: 3007 d_id: 2, w_id: 726, ol_number: 6, ol_i_id: 55020,ol_supply_w_id: 726, ol_quantity: 2, ol_amount: 95.630035, ol_dist_info: MCJMdhzhh8HDYfXn2uzoYU9d
 new order insert o_id: 3007 d_id: 2, w_id: 726, ol_number: 7, ol_i_id: 61447,ol_supply_w_id: 726, ol_quantity: 7, ol_amount: 813.533020, ol_dist_info: 1rf9uNuYMK3T1UXh7EXX0LDx
 
-``
+```
