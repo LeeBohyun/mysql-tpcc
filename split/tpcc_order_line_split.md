@@ -25,6 +25,9 @@
 |TPS | 160 | 184|
 |DB Size| 219 -> 268|221 -> 273|
 
+![image](https://user-images.githubusercontent.com/55489991/111139199-2d98b980-85c4-11eb-9b9d-4c239d8ba4eb.png)
+
+
 ## MySQL/InnoDB B+Tree Split Algorithm
 
 - mysql-5.6.26/storage/innobase/btr/btr0btr.cc : btr_page_split_and_insert()
@@ -300,7 +303,6 @@ sizes:
 ```
 ## 24 byte : internal split
 
-### ORIGIN:
 
 ```bash
 ########## Before Split 3507536 ##########
@@ -481,94 +483,7 @@ sizes:
   record          1900
   per record     20.00
 ```
-### TUNED:
-```bash
-########## Before Split 8297780 ##########
-#<Innodb::Page::Index:0x00000001219ed0>:
 
-fil header:
-{:checksum=>2702538639,
- :offset=>8297780,
- :prev=>8318108,
- :next=>8318916,
- :lsn=>135345957934,
- :type=>:INDEX,
- :flush_lsn=>0,
- :space_id=>12}
-
-fil trailer:
-{:checksum=>1706871241, :lsn_low32=>2201971758}
-
-page header:
-{:n_dir_slots=>34,
- :heap_top=>3980,
- :garbage_offset=>1946,
- :garbage_size=>100,
- :last_insert_offset=>2606,
- :direction=>:no_direction,
- :n_direction=>0,
- :n_recs=>188,
- :max_trx_id=>24189,
- :level=>0,
- :index_id=>34,
- :n_heap=>195,
- :format=>:compact}
-
-fseg header:
-{:leaf=>nil, :internal=>nil}
-
-sizes:
-  header           120
-  trailer            8
-  directory         68
-  free             140
-  used            3956
-  record          3760
-  per record     20.00
-
-########## After Split 8297780 ##########
-#<Innodb::Page::Index:0x000000015ff068>:
-
-fil header:
-{:checksum=>2140674822,
- :offset=>8297780,
- :prev=>8318108,
- :next=>8386162,
- :lsn=>135545611024,
- :type=>:INDEX,
- :flush_lsn=>0,
- :space_id=>12}
-
-fil trailer:
-{:checksum=>2308284478, :lsn_low32=>2401624848}
-
-page header:
-{:n_dir_slots=>17,
- :heap_top=>3980,
- :garbage_offset=>1206,
- :garbage_size=>1980,
- :last_insert_offset=>0,
- :direction=>:no_direction,
- :n_direction=>0,
- :n_recs=>94,
- :max_trx_id=>24189,
- :level=>0,
- :index_id=>34,
- :n_heap=>195,
- :format=>:compact}
-
-fseg header:
-{:leaf=>nil, :internal=>nil}
-
-sizes:
-  header           120
-  trailer            8
-  directory         34
-  free            2054
-  used            2042
-  record          1880
-  per record     20.00
-```
 ### 18 byte
 
 before split
@@ -661,95 +576,7 @@ sizes:
   per record     18.00
 
 ```
-### TUNED
-```bash
-########## Before Split 4285699 ##########
-#<Innodb::Page::Index:0x000000019c6ef8>:
 
-fil header:
-{:checksum=>354921205,
- :offset=>4285699,
- :prev=>4285698,
- :next=>4285700,
- :lsn=>125557675051,
- :type=>:INDEX,
- :flush_lsn=>0,
- :space_id=>12}
-
-fil trailer:
-{:checksum=>2367395871, :lsn_low32=>1003623467}
-
-page header:
-{:n_dir_slots=>54,
- :heap_top=>3972,
- :garbage_offset=>0,
- :garbage_size=>0,
- :last_insert_offset=>3960,
- :direction=>:right,
- :n_direction=>213,
- :n_recs=>214,
- :max_trx_id=>0,
- :level=>2,
- :index_id=>28,
- :n_heap=>216,
- :format=>:compact}
-
-fseg header:
-{:leaf=>nil, :internal=>nil}
-
-sizes:
-  header           120
-  trailer            8
-  directory        108
-  free               8
-  used            4088
-  record          3852
-  per record     18.00
-  
-########## After Split 4285699 ##########
-#<Innodb::Page::Index:0x0000000158f150>:
-
-fil header:
-{:checksum=>3320972312,
- :offset=>4285699,
- :prev=>6143263,
- :next=>9607680,
- :lsn=>135744718688,
- :type=>:INDEX,
- :flush_lsn=>0,
- :space_id=>12}
-
-fil trailer:
-{:checksum=>1930609154, :lsn_low32=>2600732512}
-
-page header:
-{:n_dir_slots=>28,
- :heap_top=>3972,
- :garbage_offset=>2610,
- :garbage_size=>1368,
- :last_insert_offset=>2592,
- :direction=>:no_direction,
- :n_direction=>0,
- :n_recs=>138,
- :max_trx_id=>0,
- :level=>2,
- :index_id=>28,
- :n_heap=>216,
- :format=>:compact}
-
-fseg header:
-{:leaf=>nil, :internal=>nil}
-
-sizes:
-  header           120
-  trailer            8
-  directory         56
-  free            1428
-  used            2668
-  record          2484
-  per record     18.00
-
-```
 ## Setup
 
 Setup based on this page: [MySQL-5.7 TPC-C Order-Line table split](https://gist.github.com/meeeejin/e4630dc9e54bb85a7438c225ecaad743#file-no-fkey-results-md) and mijin herself
