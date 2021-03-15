@@ -54,8 +54,8 @@ btr_page_split_and_insert(
 	
 ```
 0. try to insert to the next page if possible before split
-1. Decide the split record; 
-- split_rec == NULL means that the tuple to be inserted should be the first record on the upper half-page
+1. Decide the split record
+- (split_rec == NULL) means that the tuple to be inserted should be the first record on the upper half-page
 	-  if (btr_page_get_split_rec_to_right(cursor, &split_rec)) : split at the current record near supremum (sequential insert)
 	- else if (btr_page_get_split_rec_to_left(cursor, &split_rec)) : split at current record near infrimum
 	- else : split at the middle record (page_get_middle_rec(page))
@@ -65,7 +65,7 @@ btr_page_split_and_insert(
 5. Move then the records to the new page 
 6. The split and the tree modification is now completed. Decide the page where the tuple should be inserted
 7. Reposition the cursor for insert and try insertion
-8. If insert did not fit, try page reorganization. For compressed pages, page_cur_tuple_insert() will have attempted this already.
+8. If insert did not fit, try page reorganization. For compressed pages, page_cur_tuple_insert() will have attempted this already
  
 ## Order-Line Table Split
 
