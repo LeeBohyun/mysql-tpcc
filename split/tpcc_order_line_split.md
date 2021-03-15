@@ -1,6 +1,9 @@
 # Order-Line Table Split 
 
-## Experiment
+## TPC-C Experiment on MySQL/InnoDB
+
+### Settings
+
 - DBMS : MySQL 5.6.26
 - Origin(free space 6.25%) vs Tuned(free space 10%)
 - buffer: 10G
@@ -11,7 +14,7 @@
 
 ### Result
 
-| Split type   |  ORG | TUNED |
+| Split type   | Vanilla | Non-Split |
 |:----------:|:-------------:|:-------------:|
 |66 byte (delivery UPDATE)| 150,485 | 1,074 | 
 |61 byte (new order INSERT)| 4,921,432 | 5,843,699  | 
@@ -22,7 +25,39 @@
 |TPS | 160 | 184|
 |DB Size| 219 -> 268|221 -> 273|
 
-## Order-Line Table
+## MySQL/InnoDB b+tree Split Algorithm
+
+- mysql-5.6.26/storage/innobase/btr/btr0btr.cc
+```bash
+/*************************************************************//**
+Splits an index page to halves and inserts the tuple. It is assumed
+that mtr holds an x-latch to the index tree. NOTE: the tree x-latch is
+released within this function! NOTE that the operation of this
+function must always succeed, we cannot reverse it: therefore enough
+free disk space (2 pages) must be guaranteed to be available before
+this function is called.
+
+@return inserted record */
+UNIV_INTERN
+rec_t*
+btr_page_split_and_insert(
+/*======================*/
+	ulint		flags,	/*!< in: undo logging and locking flags */
+	btr_cur_t*	cursor,	/*!< in: cursor at which to insert; when the
+				function returns, the cursor is positioned
+				on the predecessor of the inserted record */
+	ulint**		offsets,/*!< out: offsets on inserted record */
+	mem_heap_t**	heap,	/*!< in/out: pointer to memory heap, or NULL */
+	const dtuple_t*	tuple,	/*!< in: tuple to insert */
+	ulint		n_ext,	/*!< in: number of externally stored columns */
+	mtr_t*		mtr)	/*!< in: mtr */
+```
+
+## Order-Line Table Split
+
+### Order-Line Table Structure
+
+- tpcc-mysql/create_table.sql
  ```bash
  create table order_line (
 ol_o_id int not null,
@@ -37,7 +72,7 @@ ol_amount decimal(6,2),
 ol_dist_info char(24),
 PRIMARY KEY(ol_w_id, ol_d_id, ol_o_id, ol_number) ) Engine=InnoDB ;
  ```
- 
+ - tpcc-mysql/add_fkey_idx.sql
  ```bash
  ...
 CREATE INDEX fkey_order_line_2 ON order_line (ol_supply_w_id,ol_i_id);
@@ -46,11 +81,11 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_1 FOREIGN KEY(ol_w_id,ol_d
 ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_id,ol_i_id) REFERENCES stock(s_w_id,s_i_id);
  ```
 ## Split Type:
-### Delivery trx UPDATE (61 byte):
-### 66 byte:
-### 20 byte:
-### 24 byte:
-### 18 byte:
+- Delivery trx UPDATE (61 byte):
+- 66 byte:
+- 20 byte:
+- 24 byte:
+- 18 byte:
 
 ### 66 byte: DELIVERY TRANSACTION
 
