@@ -59,30 +59,30 @@ btr_page_split_and_insert(
 
 - tpcc-mysql/create_table.sql
  ```bash
- create table order_line (
-ol_o_id int not null,
-ol_d_id tinyint not null,
-ol_w_id smallint not null,
-ol_number tinyint not null,
-ol_i_id int,
-ol_supply_w_id smallint,
-ol_delivery_d datetime,
-ol_quantity tinyint,
-ol_amount decimal(6,2),
-ol_dist_info char(24),
-PRIMARY KEY(ol_w_id, ol_d_id, ol_o_id, ol_number) ) Engine=InnoDB ;
+create table order_line (
+	ol_o_id int not null,
+	ol_d_id tinyint not null,
+	ol_w_id smallint not null,
+	ol_number tinyint not null,
+	ol_i_id int,
+	ol_supply_w_id smallint,
+	ol_delivery_d datetime,
+	ol_quantity tinyint,
+	ol_amount decimal(6,2),
+	ol_dist_info char(24),
+	PRIMARY KEY(ol_w_id, ol_d_id, ol_o_id, ol_number) ) Engine=InnoDB ;
  ```
  - tpcc-mysql/add_fkey_idx.sql
  ```bash
- ...
+...
 CREATE INDEX fkey_order_line_2 ON order_line (ol_supply_w_id,ol_i_id);
 ...
 ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_1 FOREIGN KEY(ol_w_id,ol_d_id,ol_o_id) REFERENCES orders(o_w_id,o_d_id,o_id);
 ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_id,ol_i_id) REFERENCES stock(s_w_id,s_i_id);
  ```
 ## Split Type:
-- Delivery trx UPDATE (61 byte):
-- 66 byte:
+- Delivery trx UPDATE (66 byte):
+- 61 byte:
 - 20 byte:
 - 24 byte:
 - 18 byte:
@@ -183,6 +183,16 @@ page directory:
 
 ```
 ## 61 byte
+
+```bash
+/*EXEC_SQL INSERT INTO order_line (ol_o_id, ol_d_id, ol_w_id, 
+				 ol_number, ol_i_id, 
+				 ol_supply_w_id, ol_quantity, 
+				 ol_amount, ol_dist_info)
+	VALUES (:o_id, :d_id, :w_id, :ol_number, :ol_i_id,
+		:ol_supply_w_id, :ol_quantity, :ol_amount,
+		:ol_dist_info);*/
+```
 
 ### ORIGIN:
 
