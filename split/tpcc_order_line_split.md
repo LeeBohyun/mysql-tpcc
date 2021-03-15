@@ -16,18 +16,18 @@
 
 | Split type   | Vanilla | Non-Split |
 |:----------:|:-------------:|:-------------:|
-|66 byte (delivery UPDATE)| 150,485 | 1,074 | 
-|61 byte (new order INSERT)| 4,921,432 | 5,843,699  | 
-|24 byte (internal split)| 23,815 |  25,481 | 
-|20 byte (fkey_order_line_2)| 2,192,074 | 2,466,556  | 
-|18 byte (internal)| 71,365 |  70,430 | 
-|total Order-Line split #| 7,359,171 | 8,407,240|
+|66 byte (delivery UPDATE)| 150,485 (2%)| 1,074 | 
+|61 byte (new order INSERT)| 4,921,432 (67%)| 5,843,699  | 
+|24 byte (internal page)| 23,815 |  25,481 | 
+|20 byte (fkey_order_line_2)| 2,192,074 (30%)| 2,466,556  | 
+|18 byte (internal page)| 71,365 |  70,430 | 
+|total Order-Line split #| 7,359,171 (100%)| 8,407,240|
 |TPS | 160 | 184|
 |DB Size| 219 -> 268|221 -> 273|
 
 ## MySQL/InnoDB b+tree Split Algorithm
 
-- mysql-5.6.26/storage/innobase/btr/btr0btr.cc
+- mysql-5.6.26/storage/innobase/btr/btr0btr.cc : btr_page_split_and_insert()
 ```bash
 /*************************************************************//**
 Splits an index page to halves and inserts the tuple. It is assumed
@@ -51,8 +51,22 @@ btr_page_split_and_insert(
 	const dtuple_t*	tuple,	/*!< in: tuple to insert */
 	ulint		n_ext,	/*!< in: number of externally stored columns */
 	mtr_t*		mtr)	/*!< in: mtr */
+	
 ```
-
+0. try to insert to the next page if possible before split
+1. Decide the split record; 
+- split_rec == NULL means that the tuple to be inserted should be the first record on the upper half-page
+	-  if (btr_page_get_split_rec_to_right(cursor, &split_rec)) : split at the current record near supremum (sequential insert)
+	- else if (btr_page_get_split_rec_to_left(cursor, &split_rec)) : split at current record near infrimum
+	- else : split at the middle record (page_get_middle_rec(page))
+2. Allocate a new page to the index
+3. Calculate the first record on the upper half-page, and the first record (move_limit) on original page which ends up on the upper half
+4. Do first the modifications in the tree structure
+5. Move then the records to the new page 
+6. The split and the tree modification is now completed. Decide the page where the tuple should be inserted
+7. Reposition the cursor for insert and try insertion
+8. If insert did not fit, try page reorganization. For compressed pages, page_cur_tuple_insert() will have attempted this already.
+ 
 ## Order-Line Table Split
 
 ### Order-Line Table Structure
@@ -87,9 +101,9 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 - 24 byte:
 - 18 byte:
 
-### 66 byte: DELIVERY TRANSACTION
+### 66 byte: Delivery trx UPDATE
 
-### ORIGIN:
+- After Split
 
 ```bash
 ########## Before Split 1751313 ##########
@@ -182,7 +196,7 @@ page directory:
 [99, 324, 588, 852, 1116, 1380, 1644, 1908, 112]
 
 ```
-## 61 byte
+### 61 byte : New Order trx INSERT
 
 ```bash
 /*EXEC_SQL INSERT INTO order_line (ol_o_id, ol_d_id, ol_w_id, 
