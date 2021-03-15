@@ -738,12 +738,59 @@ sizes:
 ```
 ## Setup
 
-Setup based on this page: [MySQL-5.7 TPC-C Order-Line table split](https://gist.github.com/meeeejin/e4630dc9e54bb85a7438c225ecaad743#file-no-fkey-results-md)
+Setup based on this page: [MySQL-5.7 TPC-C Order-Line table split](https://gist.github.com/meeeejin/e4630dc9e54bb85a7438c225ecaad743#file-no-fkey-results-md) and mijin herself
 
-btr0btr.cc in /storage/innobase/btr/
+### B+Tree Changing Free Space only on Order-Line
+
+- fil0fil.cc in /storage/innobase/fil/
+```bash
+	/* mijin */
+	if (strcmp(node->name, "./tpcc2000/order_line.ibd") == 0) {
+		srv_ol_space_id = space->id;
+		fprintf(stderr, "setting %s to %lu\n", node->name, srv_ol_space_id);
+	}
+	fprintf(stderr, "%s = %lu\n", node->name, space->id);
+	/* end */
+```
+
+- btr0cur.cc in /storage/innobase/btr/
+```bash
+...
+/* mijin */
+#include "srv0srv.h"
+/*end*/
+...
+/* mijin */
+
+	if (index->space == srv_ol_space_id) {
+		if (leaf && !zip_size && dict_index_is_clust(index)
+	    && page_get_n_recs(page) >= 2
+	    && (dict_index_get_space_reserve() + rec_size) > max_size //(UNIV_PAGE_SIZE*3/20)
+	    && (btr_page_get_split_rec_to_right(cursor, &dummy)
+		|| btr_page_get_split_rec_to_left(cursor, &dummy))) {
+		goto fail; 
+	}
+	/* end */
+
+	} 
+	else {
+		if (leaf && !zip_size && dict_index_is_clust(index)
+	    && page_get_n_recs(page) >= 2
+	    && dict_index_get_space_reserve() + rec_size > max_size
+	    && (btr_page_get_split_rec_to_right(cursor, &dummy)
+		|| btr_page_get_split_rec_to_left(cursor, &dummy))) {
+		goto fail;
+	}
+
+	}
+	/* end */
+```
+
+### B+Tree Split Monitoring
+- btr0btr.cc in /storage/innobase/btr/
 
 ```bash
-##############added code /* start */.../* end */##############
+##############added code /* lbh */ or /* mijin */ ... /* end */##############
 UNIV_INTERN
 rec_t*
 btr_page_split_and_insert{
@@ -797,7 +844,7 @@ btr_page_split_and_insert{
 		hint_page_no = page_no + 1;
 
 		/* If there is only one record in the index page, we
-		can't split the node in the middle by default. We need
+		cannot split the node in the middle by default. We need
 		to determine whether the new record will be inserted
 		to the left or right. */
 
