@@ -2,29 +2,57 @@
 
 ## Experiment
 - DBMS : MySQL 5.6.26
-- Origin(free space 6.25%) vs Tuned(free space 20%)
-- buffer: 5G
-- warehouse: 1000W(100G)
+- Origin(free space 6.25%) vs Tuned(free space 10%)
+- buffer: 10G
+- warehouse: 1000W(200G)
 - page size:4k
-- connection: 4
-- time: 1h
+- connection: 20
+- time: 48h
 
 ### Result
 
-| Split type   |  **ORG(6.25%)** | **TUNED(20%)** |
+| Split type   |  ORG | TUNED |
 |:----------:|:-------------:|:-------------:|
-|66 byte (delivery transaction)| 1249 | 0 | 
-|61 byte (new order transaction)| 32369 | 35804  | 
-|24 byte (internal)| 74 |  68 | 
-|20 byte (fkey_order_line_2)| 8032 | 7935  | 
-|18 byte (internal)| 11054 |  10623 | 
-|total Order-Line split#| 52778 | 54430|
-|storage change | 109 -> 113 |113 ->118 |
-|tmpC | 2180 | 2145|
+|66 byte (delivery UPDATE)| 150,485 | 1,074 | 
+|61 byte (new order INSERT)| 4,921,432 | 5,843,699  | 
+|24 byte (internal split)| 23,815 |  2,466,556 | 
+|20 byte (fkey_order_line_2)| 2,192,074 | 7,935  | 
+|18 byte (internal)| 71,365 |  70,430 | 
+|total Order-Line split #| 7,359,171 | 8,407,240|
+|TPS | 160 | 184|
+|DB Size| 219 -> 268|221 -> 273|
 
-# Split Type:
+## Order-Line Table
+ ```bash
+ create table order_line (
+ol_o_id int not null,
+ol_d_id tinyint not null,
+ol_w_id smallint not null,
+ol_number tinyint not null,
+ol_i_id int,
+ol_supply_w_id smallint,
+ol_delivery_d datetime,
+ol_quantity tinyint,
+ol_amount decimal(6,2),
+ol_dist_info char(24),
+PRIMARY KEY(ol_w_id, ol_d_id, ol_o_id, ol_number) ) Engine=InnoDB ;
+ ```
+ 
+ ```bash
+ ...
+CREATE INDEX fkey_order_line_2 ON order_line (ol_supply_w_id,ol_i_id);
+...
+ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_1 FOREIGN KEY(ol_w_id,ol_d_id,ol_o_id) REFERENCES orders(o_w_id,o_d_id,o_id);
+ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_id,ol_i_id) REFERENCES stock(s_w_id,s_i_id);
+ ```
+## Split Type:
+### Delivery trx UPDATE (61 byte):
+### 66 byte:
+### 20 byte:
+### 24 byte:
+### 18 byte:
 
-## 66 byte: DELIVERY TRANSACTION
+### 66 byte: DELIVERY TRANSACTION
 
 ### ORIGIN:
 
@@ -211,99 +239,6 @@ sizes:
   per record     61.00
 
 ```
-## TUNED:
-
-```bash
-#<Innodb::Page::Index:0x000000027f8dc8>:
-
-fil header:
-{:checksum=>2868640648,
- :offset=>6965195,
- :prev=>6965194,
- :next=>6965196,
- :lsn=>120888344351,
- :type=>:INDEX,
- :flush_lsn=>0,
- :space_id=>12}
-
-fil trailer:
-{:checksum=>2069539178, :lsn_low32=>629260063}
-
-page header:
-{:n_dir_slots=>13,
- :heap_top=>3223,
- :garbage_offset=>0,
- :garbage_size=>0,
- :last_insert_offset=>3163,
- :direction=>:right,
- :n_direction=>47,
- :n_recs=>48,
- :max_trx_id=>0,
- :level=>0,
- :index_id=>28,
- :n_heap=>50,
- :format=>:compact}
-
-fseg header:
-{:leaf=>nil, :internal=>nil}
-
-sizes:
-  header           120
-  trailer            8
-  directory         26
-  free             839
-  used            3257
-  record          3103
-  per record     64.00
-
-page directory:
-[99, 309, 553, 797, 1051, 1315, 1579, 1843, 2107, 2371, 2635, 2899, 112]
-
-#<Innodb::Page::Index:0x000000016db0e0>:
-
-fil header:
-{:checksum=>642584196,
- :offset=>6965195,
- :prev=>6965194,
- :next=>9607168,
- :lsn=>135725916021,
- :type=>:INDEX,
- :flush_lsn=>0,
- :space_id=>12}
-
-fil trailer:
-{:checksum=>3876089677, :lsn_low32=>2581929845}
-
-page header:
-{:n_dir_slots=>12,
- :heap_top=>3284,
- :garbage_offset=>2899,
- :garbage_size=>475,
- :last_insert_offset=>2833,
- :direction=>:right,
- :n_direction=>28,
- :n_recs=>44,
- :max_trx_id=>0,
- :level=>0,
- :index_id=>28,
- :n_heap=>51,
- :format=>:compact}
-
-fseg header:
-{:leaf=>nil, :internal=>nil}
-
-sizes:
-  header           120
-  trailer            8
-  directory         24
-  free            1255
-  used            2841
-  record          2689
-  per record     61.00
-
-page directory:
-[99, 309, 553, 797, 1051, 1315, 1579, 1843, 2107, 2371, 2635, 112]
-```
 ## 24 byte : internal split
 
 ### ORIGIN:
@@ -395,94 +330,7 @@ sizes:
   record          1920
   per record     24.00
 ```
-### TUNED:
-```bash
-########## Before Split 1023 ##########
-#<Innodb::Page::Index:0x0000000151f058>:
 
-fil header:
-{:checksum=>2078578054,
- :offset=>1023,
- :prev=>51826,
- :next=>812,
- :lsn=>3427820432,
- :type=>:INDEX,
- :flush_lsn=>0,
- :space_id=>12}
-
-fil trailer:
-{:checksum=>1124983810, :lsn_low32=>3427820432}
-
-page header:
-{:n_dir_slots=>24,
- :heap_top=>3984,
- :garbage_offset=>0,
- :garbage_size=>0,
- :last_insert_offset=>3966,
- :direction=>:no_direction,
- :n_direction=>0,
- :n_recs=>161,
- :max_trx_id=>0,
- :level=>1,
- :index_id=>34,
- :n_heap=>163,
- :format=>:compact}
-
-fseg header:
-{:leaf=>nil, :internal=>nil}
-
-sizes:
-  header           120
-  trailer            8
-  directory         48
-  free              56
-  used            4040
-  record          3864
-  per record     24.00
-  
-########## After Split 1023 ##########
-#<Innodb::Page::Index:0x00000001bddf20>:
-
-fil header:
-{:checksum=>3745753673,
- :offset=>1023,
- :prev=>51826,
- :next=>8018886,
- :lsn=>135578728920,
- :type=>:INDEX,
- :flush_lsn=>0,
- :space_id=>12}
-
-fil trailer:
-{:checksum=>1327493074, :lsn_low32=>2434742744}
-
-page header:
-{:n_dir_slots=>13,
- :heap_top=>3984,
- :garbage_offset=>1110,
- :garbage_size=>1944,
- :last_insert_offset=>0,
- :direction=>:no_direction,
- :n_direction=>0,
- :n_recs=>80,
- :max_trx_id=>0,
- :level=>1,
- :index_id=>34,
- :n_heap=>163,
- :format=>:compact}
-
-fseg header:
-{:leaf=>nil, :internal=>nil}
-
-sizes:
-  header           120
-  trailer            8
-  directory         26
-  free            2022
-  used            2074
-  record          1920
-  per record     24.00
-```
 ## 20 byte: fkey_order_line_2 / leaf 
 
 ### ORIGIN:
