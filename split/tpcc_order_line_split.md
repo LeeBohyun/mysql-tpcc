@@ -25,8 +25,6 @@
 |TPS | 160 | 184|
 |DB Size| 219 -> 268|221 -> 273|
 
-![image](https://user-images.githubusercontent.com/55489991/111139199-2d98b980-85c4-11eb-9b9d-4c239d8ba4eb.png)
-
 
 ## MySQL/InnoDB B+Tree Split Algorithm
 
