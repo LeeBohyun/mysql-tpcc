@@ -1159,14 +1159,7 @@ id          name                            root        fseg        fseg_id     
 28                                          3           internal    1           36073       41248       87.45%      
 28                                          3           leaf        2           5437329     6214176     87.50%      
 34                                          4           internal    3           20470       23583       86.80%      
-34                                          4           leaf        4           2278982     2604576     87.50% 
-
-lbh@lbh-Z170X-UD5:~/test_data$ innodb_space -f tpcc1000/order_line.ibd space-indexes
-id          name                            root        fseg        fseg_id     used        allocated   fill_factor 
-28                                          3           internal    1           40014       45856       87.26%      
-28                                          3           leaf        2           6450884     7372576     87.50%      
-34                                          4           internal    3           20637       23839       86.57%      
-34                                          4           leaf        4           2299572     2628128     87.50%      
+34                                          4           leaf        4           2278982     2604576     87.50%   
 
 ```
 
