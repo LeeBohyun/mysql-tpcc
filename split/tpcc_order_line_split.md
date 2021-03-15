@@ -25,7 +25,7 @@
 |TPS | 160 | 184|
 |DB Size| 219 -> 268|221 -> 273|
 
-## MySQL/InnoDB b+tree Split Algorithm
+## MySQL/InnoDB B+Tree Split Algorithm
 
 - mysql-5.6.26/storage/innobase/btr/btr0btr.cc : btr_page_split_and_insert()
 ```bash
