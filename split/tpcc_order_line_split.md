@@ -598,7 +598,45 @@ Setup based on this page: [MySQL-5.7 TPC-C Order-Line table split](https://gist.
 /* mijin */
 #include "srv0srv.h"
 /*end*/
+
 ...
+
+/*************************************************************//**
+Tries to perform an insert to a page in an index tree, next to cursor.
+It is assumed that mtr holds an x-latch on the page. The operation does
+not succeed if there is too little space on the page. If there is just
+one record on the page, the insert will always succeed; this is to
+prevent trying to split a page with just one record.
+@return	DB_SUCCESS, DB_WAIT_LOCK, DB_FAIL, or error number */
+UNIV_INTERN
+dberr_t
+btr_cur_optimistic_insert(
+/*======================*/
+	ulint		flags,	/*!< in: undo logging and locking flags: if not
+				zero, the parameters index and thr should be
+				specified */
+	btr_cur_t*	cursor,	/*!< in: cursor on page after which to insert;
+				cursor stays valid */
+	ulint**		offsets,/*!< out: offsets on *rec */
+	mem_heap_t**	heap,	/*!< in/out: pointer to memory heap, or NULL */
+	dtuple_t*	entry,	/*!< in/out: entry to insert */
+	rec_t**		rec,	/*!< out: pointer to inserted record if
+				succeed */
+	big_rec_t**	big_rec,/*!< out: big rec vector whose fields have to
+				be stored externally by the caller, or
+				NULL */
+	ulint		n_ext,	/*!< in: number of externally stored columns */
+	que_thr_t*	thr,	/*!< in: query thread or NULL */
+	mtr_t*		mtr)	/*!< in/out: mini-transaction;
+				if this function returns DB_SUCCESS on
+				a leaf page of a secondary index in a
+				compressed tablespace, the caller must
+				mtr_commit(mtr) before latching
+				any further pages */
+{
+
+...
+
 /* mijin */
 
 	if (index->space == srv_ol_space_id) {
@@ -975,6 +1013,10 @@ func_exit:
 ...
 }
 ```
+## What I've Found Until Now...
+
+- ``fkey_order_line_2`` leaf page split (20byte) better with middle page split than rightmost split
+- 
 
 ### mysql_ruby
 ```bash
