@@ -63,8 +63,6 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 
 ### 66 byte: Delivery trx UPDATE
 
-- After Split
-
 ```bash
 ########## Before Split 1751313 ##########
 #<Innodb::Page::Index:0x0000000132f388>:
