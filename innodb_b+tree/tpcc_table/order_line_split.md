@@ -32,7 +32,7 @@
 |24 byte (internal page)| 6 963|  6 149 | 6 977|
 |20 byte (fkey_order_line_2)|500 761| 557 311  | 553 647|
 |18 byte (internal page)| 21 751 |  21 074 | 21 242|
-|total Order-Line split #| 1 743 711| 1 931 201| |
+|total Order-Line split #| 1 743 711| 1 931 201| 1 931 201|
 
 
 ## Order-Line Table Split
