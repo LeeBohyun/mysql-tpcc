@@ -2,7 +2,7 @@
 
 `warning` Mysql version: mysql-5.6.26
 
-- btr0btr.cc in /storage/innobase/btr/
+## btr0btr.cc in /storage/innobase/btr/
 
 ```bash
 ##############added code /* lbh */ or /* mijin */ ... /* end */##############
@@ -351,3 +351,27 @@ func_exit:
 ...
 }
 ```
+## mysql_ruby
+
+### Average Page Usage
+
+```bash
+lbh@lbh-Z170X-UD5:~/test_data1$ innodb_space -f tpcc1000/order_line.ibd space-indexes
+
+id          name                            root        fseg        fseg_id     used        allocated   fill_factor 
+28                                          3           internal    1           36073       41248       87.45%      
+28                                          3           leaf        2           5437329     6214176     87.50%      
+34                                          4           internal    3           20470       23583       86.80%      
+34                                          4           leaf        4           2278982     2604576     87.50%   
+
+```
+
+### Tracing a Single Page
+
+```bash
+test_data$ innodb_space -f tpcc1000/order_line.ibd -p 1387409 page-dump
+```
+
+## Reference
+- https://gist.github.com/meeeejin/e4630dc9e54bb85a7438c225ecaad743#file-no-fkey-results-md (mysql-5.7)
+- https://meeeejin.github.io/posts/a-quick-introduction-to-innodb-ruby/
