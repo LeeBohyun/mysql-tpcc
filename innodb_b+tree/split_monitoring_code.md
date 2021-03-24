@@ -351,7 +351,7 @@ func_exit:
 ...
 }
 ```
-## mysql_ruby
+## MySQL-Ruby
 
 ### Average Page Usage
 
