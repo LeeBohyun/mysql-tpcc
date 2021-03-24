@@ -10,11 +10,10 @@
 - warehouse: 1000W(200G)
 - page size:4k
 - connection: 20
-- time: 48h
 
-### Result
+### Result for 48h
 
-| Split type   | Vanilla | Non-Split |
+| Split type   | Vanilla | Non-Split 10%|
 |:----------:|:-------------:|:-------------:|
 |66 byte (delivery UPDATE)| 150,485 (2%)| 1,074 | 
 |61 byte (new order INSERT)| 4,921,432 (67%)| 5,843,699  | 
@@ -25,12 +24,23 @@
 |TPS | 160 | 184|
 |DB Size| 219 -> 268|221 -> 273|
 
+### Result for 10h
+| Split type   | Vanilla | Non-Split 10% | Non-Split 15%|
+|:----------:|:-------------:|:-------------:|:-------------:|
+|66 byte (delivery UPDATE)| 53 774| 0 | 0|
+|61 byte (new order INSERT)| 1 160 462| 1 346 667  | 1 419 846|
+|24 byte (internal page)| 6 963|  6 149 | 6 977|
+|20 byte (fkey_order_line_2)|500 761| 557 311  | 553 647|
+|18 byte (internal page)| 21 751 |  21 074 | 21 242|
+|total Order-Line split #| 1 743 711| 1 931 201| |
 
 
 ## Order-Line Table Split
 
 ### Order-Line Table Structure
 
+- Order-Line is a growing table
+- 
 - tpcc-mysql/create_table.sql
  ```bash
 create table order_line (
@@ -626,17 +636,6 @@ btr_cur_optimistic_insert(
 - ``fkey_order_line_2`` leaf page split (20byte) better with middle page split than rightmost split
 - free space 10% is enough
 
-## mysql_ruby
-```bash
-lbh@lbh-Z170X-UD5:~/test_data1$ innodb_space -f tpcc1000/order_line.ibd space-indexes
-
-id          name                            root        fseg        fseg_id     used        allocated   fill_factor 
-28                                          3           internal    1           36073       41248       87.45%      
-28                                          3           leaf        2           5437329     6214176     87.50%      
-34                                          4           internal    3           20470       23583       86.80%      
-34                                          4           leaf        4           2278982     2604576     87.50%   
-
-```
 
 ## Reference
 - https://gist.github.com/meeeejin/e4630dc9e54bb85a7438c225ecaad743#file-no-fkey-results-md (mysql-5.7)
