@@ -626,7 +626,7 @@ btr_cur_optimistic_insert(
 - ``fkey_order_line_2`` leaf page split (20byte) better with middle page split than rightmost split
 - free space 10% is enough
 
-### mysql_ruby
+## mysql_ruby
 ```bash
 lbh@lbh-Z170X-UD5:~/test_data1$ innodb_space -f tpcc1000/order_line.ibd space-indexes
 
