@@ -70,10 +70,24 @@ CREATE INDEX idx_orders ON orders (o_w_id,o_d_id,o_c_id,o_id);
 ALTER TABLE orders ADD CONSTRAINT fkey_orders_1 FOREIGN KEY(o_w_id,o_d_id,o_c_id) REFERENCES customer(c_w_id,c_d_id,c_id);
 
 ```
+## Insert by New-Order Transaction
+
+- tpcc-mysql/src/neword.c
+```bash
+...
+	/*EXEC_SQL INSERT INTO orders (o_id, o_d_id, o_w_id, o_c_id,
+			             o_entry_d, o_ol_cnt, o_all_local)
+		VALUES(:o_id, :d_id, :w_id, :c_id, 
+		       :datetime,
+                       :o_ol_cnt, :o_all_local);*/
+
+...
+```
 
 ## Split Type and Query
 
 ### 17 byte
+
 ```bash
 [Note] InnoDB: Before Split (17): original =  310158 / 220 / 1 / 0 / 0 / idx_orders
 
