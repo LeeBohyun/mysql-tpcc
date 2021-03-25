@@ -237,19 +237,15 @@ page directory:
 ```
 ### 61 byte : PK / leaf
 - Split Method
-``bash
+```bash
 [Note] InnoDB: btr_page_get_split_rec_to_right: sequential inserts
-
 [Note] InnoDB: btr_page_get_split_rec_to_right: sequential inserts: page_rec_is_supremum
-
 [Note] InnoDB: Before Split (61): original =  16412591 / 60 / 1 / 1 / 2 / PRIMARY
-
 [Note] InnoDB: btr_page_get_split_rec_to_right: sequential inserts
 [Note] InnoDB: btr_page_get_split_rec_to_right: sequential inserts: page_rec_is_supremum
-
 2021-03-09 02:08:47 4570 [Note] InnoDB: btr_page_split_and_insert: btr_page_get_split_rec_to_right: original =  16412591 / 60 / 1 / 1 / 2 / PRIMARY
 2021-03-09 02:08:47 4570 [Note] InnoDB: After Split (61): original =  16412591 / 59 / 1, new =  17200307 / 2 / 1
-``
+```
 - Innodb-Ruby
 
 ```bash
