@@ -24,16 +24,34 @@
     <td>Split #</td>
   </tr>
   <tr>
-    <td>17 byte</td>
-    <td>sec idx internal split</td>
+    <td>17 byte-1</td>
+    <td>sec idx leaf split</td>
     <td>middle rec split</td>
     <td>41 489 (30%)</td>
+  </tr>
+  <tr>
+    <td>17 byte-2</td>
+    <td>PK internal split</td>
+    <td>left rec split</td>
+    <td>4</td>
   </tr>
   <tr>
     <td>37 byte</td>
     <td>primary key leaf split</td>
     <td>rightmost split</td>
     <td>96 334 (70%)</td>
+  </tr>
+  <tr>
+    <td>38 byte</td>
+    <td>primary key leaf split</td>
+    <td>rightmost split</td>
+    <td>764</td>
+  </tr>
+  <tr>
+    <td>21 byte</td>
+    <td>sec_idx internal split</td>
+    <td>middle rec split</td>
+    <td>7</td>
   </tr>
   <tr>
     <td colspan=3>Total # Split</td>
@@ -85,24 +103,37 @@ ALTER TABLE orders ADD CONSTRAINT fkey_orders_1 FOREIGN KEY(o_w_id,o_d_id,o_c_id
 
 ## Split Type and Query
 
-### 17 byte
-- 
+### 17 byte-1 : sec_idx / leaf
 
 ```bash
 [Note] InnoDB: Before Split (17): original =  310158 / 220 / 1 / 0 / 0 / idx_orders
-
 [Note] InnoDB: btr_page_split_and_insert: page_get_n_recs(page) > 1: Split (17): original =  310158 / 220 / 1 / 0 / 0 / idx_orders
-
 [Note] InnoDB: After Split (17): original =  310158 / 110 / 1, new =  1680011 / 111 / 1
 ```
+### 17 byte-2 : PK / internal
+```bash
+[Note] InnoDB: Before Split (17): original =  584 / 226 / 0 / 1 / 2 / PRIMARY
+[Note] InnoDB: btr_page_split_and_insert: btr_page_get_split_rec_to_left: Split (17): original =  584 / 226 / 0 / 1 / 2 / PRIMARY
+[Note] InnoDB: After Split (17): original =  584 / 216 / 0, new =  1253004 / 11 / 0
+```
+### 21 byte : sec_idx / internal
+```bash
+[Note] InnoDB: Before Split (21): original =  998943 / 184 / 0 / 0 / 0 / idx_orders
+[Note] InnoDB: btr_page_split_and_insert: page_get_n_recs(page) > 1: Split (21): original =  998943 / 184 / 0 / 0 / 0 / idx_orders
+[Note] InnoDB: After Split (21): original =  998943 / 92 / 0, new =  1061953 / 93 / 0
+```
 
-### 37 byte
+### 37 byte: PK /leaf
 ```bash
 [Note] InnoDB: Before Split (37): original =  1621563 / 98 / 1 / 1 / 2 / PRIMARY
-
 [Note] InnoDB: btr_page_get_split_rec_to_right: sequential inserts
-
 [Note] InnoDB: btr_page_split_and_insert: btr_page_get_split_rec_to_right: Split (37): original =  1621563 / 98 / 1 / 1 / 2 / PRIMARY
-
 [Note] InnoDB: After Split (37): original =  1621563 / 96 / 1, new =  1690640 / 3 / 1
+```
+
+### 38 byte: PK / leaf
+```bash
+[Note] InnoDB: Before Split (38): original =  1270623 / 102 / 1 / 1 / 2 / PRIMARY
+[Note] InnoDB: btr_page_split_and_insert: btr_page_get_split_rec_to_left: Split (38): original =  1270623 / 102 / 1 / 1 / 2 / PRIMARY
+[Note] InnoDB: After Split (38): original =  1270623 / 3 / 1, new =  1571186 / 100 / 1
 ```
