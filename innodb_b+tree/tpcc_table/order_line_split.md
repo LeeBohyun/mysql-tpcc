@@ -71,21 +71,21 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 		<td># Byte of Rec</td>
 		<td>Trx Type</td>
 		<td>Leaf / Internal</td>
-		<td>Primary Key / Secondary Idx </td>
+		<td>PK / Sec Idx </td>
 		<td>split rec</td>
 	</tr>
 	<tr>
 		<td>66 byte</td>
 		<td>Delivery trx <i>UPDATE</i></td>
 		<td>leaf</td>
-		<td>Primary Key</td>
+		<td>primary key</td>
 		<td>middle rec</td>
 	</tr>
 	<tr>
 		<td>61 byte</td>
 		<td>New-Order trx <i>INSERT</i></td>
 		<td>leaf</td>
-		<td>Primary Key </td>
+		<td>primary key </td>
 		<td>rightmost rec</td>
 	</tr>
 	<tr>
@@ -99,14 +99,14 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 		<td>20 byte</td>
 		<td>New-Order trx <i>INSERT</i></td>	
 		<td>leaf/td>
-		<td>secondary index</td>
+		<td>secondary idx</td>
 		<td>middle rec<</td>
 	</tr>
 	<tr>
 		<td>18 byte</td>
 		<td>New-Order trx <i>INSERT</i></td>
 		<td>internal</td>
-		<td>primary Key </td>
+		<td>primary key </td>
 		<td>middle rec</td>
 	</tr>
 </table>
