@@ -7,7 +7,7 @@
 - DBMS : MySQL 5.6.26
 - Origin(free space 6.25%) vs Tuned(free space 10%)
 - buffer: 10G
-- warehouse: 1000W(200G)
+- warehouse: 2000W(200G)
 - page size:4k
 - connection: 20
 
