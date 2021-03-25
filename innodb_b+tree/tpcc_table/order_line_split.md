@@ -40,7 +40,7 @@
 ### Order-Line Table Structure
 
 - Order-Line is a growing table
-- 
+- db grows by  <i color="red">new_order trx</i> and <i>delivery trx</i>
 - tpcc-mysql/create_table.sql
  ```bash
 create table order_line (
@@ -64,6 +64,28 @@ CREATE INDEX fkey_order_line_2 ON order_line (ol_supply_w_id,ol_i_id);
 ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_1 FOREIGN KEY(ol_w_id,ol_d_id,ol_o_id) REFERENCES orders(o_w_id,o_d_id,o_id);
 ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_id,ol_i_id) REFERENCES stock(s_w_id,s_i_id);
  ```
+## New-Order and Delivery Trx
+
+### New Order trx INSERT
+
+```bash
+/*EXEC_SQL INSERT INTO order_line (ol_o_id, ol_d_id, ol_w_id, 
+				 ol_number, ol_i_id, 
+				 ol_supply_w_id, ol_quantity, 
+				 ol_amount, ol_dist_info)
+	VALUES (:o_id, :d_id, :w_id, :ol_number, :ol_i_id,
+		:ol_supply_w_id, :ol_quantity, :ol_amount,
+		:ol_dist_info);*/
+```
+
+### Delivery Trx UPDATE
+```bash
+		/*EXEC_SQL UPDATE order_line
+		                SET ol_delivery_d = :datetime
+		                WHERE ol_o_id = :no_o_id AND ol_d_id = :d_id AND
+				ol_w_id = :w_id;*/
+```
+
 ## Split Type:
 
 <table style="text-align: center">
@@ -113,8 +135,15 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 	
 
 
-### 66 byte: Delivery trx UPDATE
+### 66 byte : PK / Leaf
+- split method
+```bash
+[Note] InnoDB: Before Split (66): original =  12844638 / 59 / 1 / 1 / 2 / PRIMARY
+[Note] InnoDB: btr_page_split_and_insert: page_get_n_recs(page) > 1: original =  12844638 / 59 / 1 / 1 / 2 / PRIMARY
+[Note] InnoDB: After Split (66): original =  12844638 / 29 / 1, new =  17213285 / 31 / 1
+```
 
+- Innodb-Ruby
 ```bash
 ########## Before Split 1751313 ##########
 #<Innodb::Page::Index:0x0000000132f388>:
@@ -206,19 +235,22 @@ page directory:
 [99, 324, 588, 852, 1116, 1380, 1644, 1908, 112]
 
 ```
-### 61 byte : New Order trx INSERT
+### 61 byte : PK / leaf
+- Split Method
+``bash
+[Note] InnoDB: btr_page_get_split_rec_to_right: sequential inserts
 
-```bash
-/*EXEC_SQL INSERT INTO order_line (ol_o_id, ol_d_id, ol_w_id, 
-				 ol_number, ol_i_id, 
-				 ol_supply_w_id, ol_quantity, 
-				 ol_amount, ol_dist_info)
-	VALUES (:o_id, :d_id, :w_id, :ol_number, :ol_i_id,
-		:ol_supply_w_id, :ol_quantity, :ol_amount,
-		:ol_dist_info);*/
-```
+[Note] InnoDB: btr_page_get_split_rec_to_right: sequential inserts: page_rec_is_supremum
 
-### ORIGIN:
+[Note] InnoDB: Before Split (61): original =  16412591 / 60 / 1 / 1 / 2 / PRIMARY
+
+[Note] InnoDB: btr_page_get_split_rec_to_right: sequential inserts
+[Note] InnoDB: btr_page_get_split_rec_to_right: sequential inserts: page_rec_is_supremum
+
+2021-03-09 02:08:47 4570 [Note] InnoDB: btr_page_split_and_insert: btr_page_get_split_rec_to_right: original =  16412591 / 60 / 1 / 1 / 2 / PRIMARY
+2021-03-09 02:08:47 4570 [Note] InnoDB: After Split (61): original =  16412591 / 59 / 1, new =  17200307 / 2 / 1
+``
+- Innodb-Ruby
 
 ```bash
 ########## Before Split 1119255 ##########
@@ -308,9 +340,13 @@ sizes:
   per record     61.00
 
 ```
-## 24 byte : internal split
-
-
+### 24 byte : sec_idx / internal
+- Split method
+``bash
+[Note] InnoDB: Before Split (24): original =  9432675 / 157 / 0 / 0 / 0 / fkey_order_line_2
+[Note] InnoDB: After Split (24): original =  9432675 / 78 / 0, new =  14733036 / 80 / 0
+``
+- Innodb-Ruby
 ```bash
 ########## Before Split 3507536 ##########
 #<Innodb::Page::Index:0x00000002667568>:
@@ -399,9 +435,15 @@ sizes:
   per record     24.00
 ```
 
-## 20 byte: fkey_order_line_2 / leaf 
+### 20 byte : sec_idx / leaf
+- split method
+``bash
+[Note] InnoDB: Before Split (20): original =  9653746 / 188 / 1 / 0 / 0 / fkey_order_line_2
+[Note] InnoDB: btr_page_split_and_insert: page_get_n_recs(page) > 1: original =  9653746 / 188 / 1 / 0 / 0 / fkey_order_line_2
+[Note] InnoDB: After Split (20): original =  9653746 / 94 / 1, new =  15005010 / 95 / 1
+``
 
-### ORIGIN:
+- Innodb-Ruby
 
 ```bash
 ########## Before Split 7659060 ##########
@@ -491,9 +533,15 @@ sizes:
   per record     20.00
 ```
 
-### 18 byte
+### 18 byte : PK / internal
 
-before split
+- split method : middle rec split
+```bash
+[Note] InnoDB: Before Split (18): original =  5913832 / 213 / 0 / 1 / 2 / PRIMARY
+[Note] InnoDB: After Split (18): original =  5913832 / 107 / 0, new =  17178589 / 107 / 0
+```
+
+- Innodb-Ruby
 ```bash
 ########## Before Split 8035948 ##########
 #<Innodb::Page::Index:0x00000000a77088>:
