@@ -100,7 +100,7 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 		<td>New-Order trx <i>INSERT</i></td>	
 		<td>leaf/td>
 		<td>secondary idx</td>
-		<td>middle rec<</td>
+		<td>middle rec</td>
 	</tr>
 	<tr>
 		<td>18 byte</td>
