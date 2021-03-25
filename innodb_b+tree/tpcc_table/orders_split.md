@@ -13,10 +13,9 @@
 
 ### Experiment Result 
 
-<table>
-  <tr>
-    <td colspan=3>Order Table Split</td>
-    <td>split #</td>
+<table style="text-align: center" >
+  <tr style="text-align: center">
+    <td colspan=4>Order Table Split</td>
   </tr>
    <tr>
     <td>Insert byte #</td>
@@ -87,6 +86,7 @@ ALTER TABLE orders ADD CONSTRAINT fkey_orders_1 FOREIGN KEY(o_w_id,o_d_id,o_c_id
 ## Split Type and Query
 
 ### 17 byte
+- 
 
 ```bash
 [Note] InnoDB: Before Split (17): original =  310158 / 220 / 1 / 0 / 0 / idx_orders
