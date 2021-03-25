@@ -65,11 +65,53 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_1 FOREIGN KEY(ol_w_id,ol_d
 ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_id,ol_i_id) REFERENCES stock(s_w_id,s_i_id);
  ```
 ## Split Type:
-- Delivery trx UPDATE (66 byte):
-- 61 byte:
-- 20 byte:
-- 24 byte:
-- 18 byte:
+
+<table style="text-align: center">
+	<tr style="color: green">
+		<td># Byte of Rec</td>
+		<td>Trx Type</td>
+		<td>Leaf / Internal</td>
+		<td>Primary Key / Secondary Idx </td>
+		<td>split rec</td>
+	</tr>
+	<tr>
+		<td>66 byte</td>
+		<td>Delivery trx <i>UPDATE</i></td>
+		<td>leaf</td>
+		<td>Primary Key</td>
+		<td>middle rec</td>
+	</tr>
+	<tr>
+		<td>61 byte</td>
+		<td>New-Order trx <i>INSERT</i></td>
+		<td>leaf</td>
+		<td>Primary Key </td>
+		<td>rightmost rec</td>
+	</tr>
+	<tr>
+		<td>24 byte</td>
+		<td>New-Order trx <i>INSERT</i></td>
+		<td>internal</td>
+		<td>secondary idx </td>
+		<td>middle rec</td>
+	</tr>
+	<tr>
+		<td>20 byte</td>
+		<td>New-Order trx <i>INSERT</i></td>	
+		<td>leaf/td>
+		<td>secondary index</td>
+		<td>middle rec<</td>
+	</tr>
+	<tr>
+		<td>18 byte</td>
+		<td>New-Order trx <i>INSERT</i></td>
+		<td>internal</td>
+		<td>primary Key </td>
+		<td>middle rec</td>
+	</tr>
+</table>
+	
+
 
 ### 66 byte: Delivery trx UPDATE
 
