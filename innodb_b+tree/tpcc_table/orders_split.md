@@ -37,13 +37,13 @@
   </tr>
   <tr>
     <td>37 byte</td>
-    <td>primary key leaf split</td>
+    <td>PK leaf split</td>
     <td>rightmost split</td>
     <td>96 334 (70%)</td>
   </tr>
   <tr>
     <td>38 byte</td>
-    <td>primary key leaf split</td>
+    <td>PK leaf split</td>
     <td>rightmost split</td>
     <td>764</td>
   </tr>
