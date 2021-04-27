@@ -34,6 +34,54 @@
 |18 byte (internal page)| 21 751 |  21 074 | 21 242|
 |total Order-Line split #| 1 743 711| 1 931 201| 1 931 201|
 
+### Split Type
+
+## Split Type:
+
+<table style="text-align: center">
+	<tr style="color: green">
+		<td># Byte of Rec</td>
+		<td>Trx Type</td>
+		<td>Leaf / Internal</td>
+		<td>PK / Sec Idx </td>
+		<td>split rec</td>
+	</tr>
+	<tr>
+		<td>66 byte</td>
+		<td>Delivery trx <i>UPDATE</i></td>
+		<td>leaf</td>
+		<td>primary key</td>
+		<td>middle rec</td>
+	</tr>
+	<tr>
+		<td>61 byte</td>
+		<td>New-Order trx <i>INSERT</i></td>
+		<td>leaf</td>
+		<td>primary key </td>
+		<td>rightmost rec</td>
+	</tr>
+	<tr>
+		<td>24 byte</td>
+		<td>New-Order trx <i>INSERT</i></td>
+		<td>internal</td>
+		<td>secondary idx </td>
+		<td>middle rec</td>
+	</tr>
+	<tr>
+		<td>20 byte</td>
+		<td>New-Order trx <i>INSERT</i></td>	
+		<td>leaf</td>
+		<td>secondary idx</td>
+		<td>middle rec</td>
+	</tr>
+	<tr>
+		<td>18 byte</td>
+		<td>New-Order trx <i>INSERT</i></td>
+		<td>internal</td>
+		<td>primary key </td>
+		<td>middle rec</td>
+	</tr>
+</table>
 
 ## Order-Line Table Split
 
@@ -86,54 +134,7 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 				ol_w_id = :w_id;*/
 ```
 
-## Split Type:
-
-<table style="text-align: center">
-	<tr style="color: green">
-		<td># Byte of Rec</td>
-		<td>Trx Type</td>
-		<td>Leaf / Internal</td>
-		<td>PK / Sec Idx </td>
-		<td>split rec</td>
-	</tr>
-	<tr>
-		<td>66 byte</td>
-		<td>Delivery trx <i>UPDATE</i></td>
-		<td>leaf</td>
-		<td>primary key</td>
-		<td>middle rec</td>
-	</tr>
-	<tr>
-		<td>61 byte</td>
-		<td>New-Order trx <i>INSERT</i></td>
-		<td>leaf</td>
-		<td>primary key </td>
-		<td>rightmost rec</td>
-	</tr>
-	<tr>
-		<td>24 byte</td>
-		<td>New-Order trx <i>INSERT</i></td>
-		<td>internal</td>
-		<td>secondary idx </td>
-		<td>middle rec</td>
-	</tr>
-	<tr>
-		<td>20 byte</td>
-		<td>New-Order trx <i>INSERT</i></td>	
-		<td>leaf</td>
-		<td>secondary idx</td>
-		<td>middle rec</td>
-	</tr>
-	<tr>
-		<td>18 byte</td>
-		<td>New-Order trx <i>INSERT</i></td>
-		<td>internal</td>
-		<td>primary key </td>
-		<td>middle rec</td>
-	</tr>
-</table>
-	
-
+## Split Details
 
 ### 66 byte : PK / Leaf
 - split method
