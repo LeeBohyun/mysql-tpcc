@@ -338,10 +338,10 @@ sizes:
 ```
 ### 24 byte : sec_idx / internal
 - Split method
-``bash
+```bash
 [Note] InnoDB: Before Split (24): original =  9432675 / 157 / 0 / 0 / 0 / fkey_order_line_2
 [Note] InnoDB: After Split (24): original =  9432675 / 78 / 0, new =  14733036 / 80 / 0
-``
+```
 - Innodb-Ruby
 ```bash
 ########## Before Split 3507536 ##########
@@ -433,11 +433,11 @@ sizes:
 
 ### 20 byte : sec_idx / leaf
 - split method
-``bash
+```bash
 [Note] InnoDB: Before Split (20): original =  9653746 / 188 / 1 / 0 / 0 / fkey_order_line_2
 [Note] InnoDB: btr_page_split_and_insert: page_get_n_recs(page) > 1: original =  9653746 / 188 / 1 / 0 / 0 / fkey_order_line_2
 [Note] InnoDB: After Split (20): original =  9653746 / 94 / 1, new =  15005010 / 95 / 1
-``
+```
 
 - Innodb-Ruby
 
