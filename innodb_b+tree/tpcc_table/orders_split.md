@@ -59,7 +59,7 @@
   </tr>
    <tr>
     <td colspan=3>orders.ibd size</td>
-    <td>6.9G -> 7.5G</td>
+    <td>5G -> 6.7G</td>
   </tr>
  </table>
 
