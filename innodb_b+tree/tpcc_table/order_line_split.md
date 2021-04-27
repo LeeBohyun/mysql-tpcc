@@ -36,8 +36,6 @@
 
 ### Split Type
 
-## Split Type:
-
 <table style="text-align: center">
 	<tr style="color: green">
 		<td># Byte of Rec</td>
