@@ -437,7 +437,9 @@ sizes:
 [Note] InnoDB: btr_page_split_and_insert: page_get_n_recs(page) > 1: original =  9653746 / 188 / 1 / 0 / 0 / fkey_order_line_2
 [Note] InnoDB: After Split (20): original =  9653746 / 94 / 1, new =  15005010 / 95 / 1
 ```
+```bash
 
+```
 - Innodb-Ruby
 
 ```bash
