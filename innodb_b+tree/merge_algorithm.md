@@ -2,7 +2,7 @@
 ## Merge related functions
 
 in storage/innobase/btr/btr0btr.cc
-- btr_compress()
+- btr_compress(): main merge function
 - btr_cur_compress_if_useful()
 - btr_cur_compress_recommendation()
  
