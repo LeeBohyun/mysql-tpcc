@@ -43,6 +43,16 @@ btr_cur_compress_if_useful(
 }
 
 ```
+### MERGE THRESHOLD: BTR_CUR_PAGE_COMPRESS_LIMIT
+```bash
+/** In the pessimistic delete, if the page data size drops below this
+limit, merging it to a neighbor is tried */
+
+/* lbh */
+//#define BTR_CUR_PAGE_COMPRESS_LIMIT	(UNIV_PAGE_SIZE / 2)
+#define BTR_CUR_PAGE_COMPRESS_LIMIT	(UNIV_PAGE_SIZE /4*3)
+/* end */
+```
 
 ### btr_cur_compress_recommendation(): btr0cur.ic
 ```bash
@@ -388,3 +398,6 @@ err_exit:
 	DBUG_RETURN(FALSE);
 }
 ```
+
+# Reference
+https://www.percona.com/blog/2017/04/10/innodb-page-merging-and-page-splitting/
