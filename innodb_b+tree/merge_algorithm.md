@@ -12,7 +12,77 @@ Merge called during ``DELETE`` or ``UPDATE``
 - ``DELETE`` : btr_cur_pessimistic_delete()
 
 ## Page Merging Algorithm
+### btr_cur_compress_if_useful(): btr0cur.cc
+```bash
+/*************************************************************//**
+Tries to compress a page of the tree if it seems useful. It is assumed
+that mtr holds an x-latch on the tree and on the cursor page. To avoid
+deadlocks, mtr must also own x-latches to brothers of page, if those
+brothers exist. NOTE: it is assumed that the caller has reserved enough
+free extents so that the compression will always succeed if done!
+@return	TRUE if compression occurred */
+UNIV_INTERN
+ibool
+btr_cur_compress_if_useful(
+/*=======================*/
+	btr_cur_t*	cursor,	/*!< in/out: cursor on the page to compress;
+				cursor does not stay valid if !adjust and
+				compression occurs */
+	ibool		adjust,	/*!< in: TRUE if should adjust the
+				cursor position even if compression occurs */
+	mtr_t*		mtr)	/*!< in/out: mini-transaction */
+{
+	ut_ad(mtr_memo_contains(mtr,
+				dict_index_get_lock(btr_cur_get_index(cursor)),
+				MTR_MEMO_X_LOCK));
+	ut_ad(mtr_memo_contains(mtr, btr_cur_get_block(cursor),
+				MTR_MEMO_PAGE_X_FIX));
 
+	return(btr_cur_compress_recommendation(cursor, mtr)
+	       && btr_compress(cursor, adjust, mtr));
+}
+
+```
+
+### btr_cur_compress_recommendation(): btr0cur.ic
+```bash
+Checks if compressing an index page where a btr cursor is placed makes
+sense.
+@return	TRUE if compression is recommended */
+UNIV_INLINE
+ibool
+btr_cur_compress_recommendation(
+/*============================*/
+	btr_cur_t*	cursor,	/*!< in: btr cursor */
+	mtr_t*		mtr)	/*!< in: mtr */
+{
+	const page_t*	page;
+
+	ut_ad(mtr_memo_contains(mtr, btr_cur_get_block(cursor),
+				MTR_MEMO_PAGE_X_FIX));
+
+	page = btr_cur_get_page(cursor);
+
+	LIMIT_OPTIMISTIC_INSERT_DEBUG(page_get_n_recs(page) * 2,
+				      return(FALSE));
+
+	if ((page_get_data_size(page) < BTR_CUR_PAGE_COMPRESS_LIMIT)
+	    || ((btr_page_get_next(page, mtr) == FIL_NULL)
+		&& (btr_page_get_prev(page, mtr) == FIL_NULL))) {
+
+		/* The page fillfactor has dropped below a predefined
+		minimum value OR the level in the B-tree contains just
+		one page: we recommend compression if this is not the
+		root page. */
+
+		return(dict_index_get_page(cursor->index)
+		       != page_get_page_no(page));
+	}
+
+	return(FALSE);
+}
+```
+### btr_compress(): btr0btr.cc
 ```bash
 /*************************************************************//**
 Tries to merge the page first to the left immediate brother if such a
