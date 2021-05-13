@@ -402,6 +402,104 @@ err_exit:
 	DBUG_RETURN(FALSE);
 }
 ```
+###btr_can_merge_with_page() in btr_compress()
 
+```bash
+/**************************************************************//**
+Checks if the page in the cursor can be merged with given page.
+If necessary, re-organize the merge_page.
+@return	TRUE if possible to merge. */
+UNIV_INTERN
+ibool
+btr_can_merge_with_page(
+/*====================*/
+	btr_cur_t*	cursor,		/*!< in: cursor on the page to merge */
+	ulint		page_no,	/*!< in: a sibling page */
+	buf_block_t**	merge_block,	/*!< out: the merge block */
+	mtr_t*		mtr)		/*!< in: mini-transaction */
+{
+	dict_index_t*	index;
+	page_t*		page;
+	ulint		space;
+	ulint		zip_size;
+	ulint		n_recs;
+	ulint		data_size;
+        ulint           max_ins_size_reorg;
+	ulint		max_ins_size;
+	buf_block_t*	mblock;
+	page_t*		mpage;
+	DBUG_ENTER("btr_can_merge_with_page");
+
+	if (page_no == FIL_NULL) {
+		goto error;
+	}
+
+	index = btr_cur_get_index(cursor);
+	page  = btr_cur_get_page(cursor);
+	space = dict_index_get_space(index);
+        zip_size = dict_table_zip_size(index->table);
+
+	mblock = btr_block_get(space, zip_size, page_no, RW_X_LATCH, index,
+			       mtr);
+	mpage = buf_block_get_frame(mblock);
+
+        n_recs = page_get_n_recs(page);
+        data_size = page_get_data_size(page);
+
+        max_ins_size_reorg = page_get_max_insert_size_after_reorganize(
+                mpage, n_recs);
+
+	if (data_size > max_ins_size_reorg) {
+		goto error;
+	}
+
+	/* If compression padding tells us that merging will result in
+	too packed up page i.e.: which is likely to cause compression
+	failure then don't merge the pages. */
+	if (zip_size && page_is_leaf(mpage)
+	    && (page_get_data_size(mpage) + data_size
+		>= dict_index_zip_pad_optimal_page_size(index))) {
+
+		goto error;
+	}
+
+
+	max_ins_size = page_get_max_insert_size(mpage, n_recs);
+
+	if (data_size > max_ins_size) {
+
+		/* We have to reorganize mpage */
+
+		if (!btr_page_reorganize_block(
+			    false, page_zip_level, mblock, index, mtr)) {
+
+			goto error;
+		}
+
+		max_ins_size = page_get_max_insert_size(mpage, n_recs);
+
+		ut_ad(page_validate(mpage, index));
+		ut_ad(max_ins_size == max_ins_size_reorg);
+
+		if (data_size > max_ins_size) {
+
+			/* Add fault tolerance, though this should
+			never happen */
+
+			goto error;
+		}
+	}
+
+	*merge_block = mblock;
+	DBUG_RETURN(TRUE);
+
+error:
+	*merge_block = NULL;
+	DBUG_RETURN(FALSE);
+}
+
+#endif /* !UNIV_HOTBACKUP */
+
+```
 # Reference
 https://www.percona.com/blog/2017/04/10/innodb-page-merging-and-page-splitting/
