@@ -402,7 +402,7 @@ err_exit:
 	DBUG_RETURN(FALSE);
 }
 ```
-###btr_can_merge_with_page() in btr_compress()
+### btr_can_merge_with_page() in btr_compress()
 
 ```bash
 /**************************************************************//**
