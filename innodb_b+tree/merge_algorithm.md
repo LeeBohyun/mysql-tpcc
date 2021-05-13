@@ -1,7 +1,10 @@
 # B+ Tree Page Merge in InnoDB
-## Merge related functions
 
-in storage/innobase/btr/btr0btr.cc
+## Merge Function
+
+
+## Merge related functions
+in storage/innobase/btr/
 - btr_compress(): main merge function
 - btr_cur_compress_if_useful()
 - btr_cur_compress_recommendation()
@@ -12,6 +15,7 @@ Merge called during ``DELETE`` or ``UPDATE``
 - ``DELETE`` : btr_cur_pessimistic_delete()
 
 ## Page Merging Algorithm
+
 ### btr_cur_compress_if_useful(): btr0cur.cc
 ```bash
 /*************************************************************//**
