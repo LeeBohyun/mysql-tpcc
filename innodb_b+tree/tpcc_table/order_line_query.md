@@ -1,4 +1,4 @@
-# Secondary Index Access in Order_Line Table
+# Secondary Index Access Patterns in Order_Line Table
 ## Order_Line Table
 - tpcc-mysql/create_table.sql
  ```bash
@@ -35,12 +35,23 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 ```
 ## Run Benchmark
 
+### New Order Trx
+- write: A(10)
+```bash
+		/*EXEC_SQL INSERT INTO order_line (ol_o_id, ol_d_id, ol_w_id, 
+						 ol_number, ol_i_id, 
+						 ol_supply_w_id, ol_quantity, 
+						 ol_amount, ol_dist_info)
+			VALUES (:o_id, :d_id, :w_id, :ol_number, :ol_i_id,
+				:ol_supply_w_id, :ol_quantity, :ol_amount,
+				:ol_dist_info);*/
+```
 ### Order Status Trx
+- read: P(10)
 
 ```bash
 	/*EXEC_SQL DECLARE c_items CURSOR FOR
-		SELECT ol_i_id, ol_supply_w_id, ol_quantity, ol_amount,
-                       ol_delivery_d
+		SELECT **ol_i_id, ol_supply_w_id,** ol_quantity, ol_amount, ol_delivery_d
 		FROM order_line
 	        WHERE ol_w_id = :c_w_id
 		AND ol_d_id = :c_d_id
@@ -50,12 +61,21 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 			INTO :ol_i_id, :ol_supply_w_id, :ol_quantity,
 			:ol_amount, :ol_delivery_d;*/
 ```
-
+### Delivery Trx
+- write: Update(100)
+- read: Select(100)
+```bash
+		/*EXEC_SQL UPDATE order_line
+		                SET ol_delivery_d = :datetime
+		                WHERE ol_o_id = :no_o_id AND ol_d_id = :d_id AND
+				ol_w_id = :w_id;*/
+```
 ### Stock Level Trx
+- read : P(200)
 ```bash
 	/* find the most recent 20 orders for this district */
 	/*EXEC_SQL DECLARE ord_line CURSOR FOR
-	                SELECT DISTINCT ol_i_id
+	                SELECT DISTINCT **ol_i_id**
 	                FROM order_line
 	                WHERE ol_w_id = :w_id
 			AND ol_d_id = :d_id
@@ -67,27 +87,6 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 	EXEC SQL WHENEVER NOT FOUND GOTO done;*/
 ```
 
-### Delivery Trx
-```bash
-		/*EXEC_SQL UPDATE order_line
-		                SET ol_delivery_d = :datetime
-		                WHERE ol_o_id = :no_o_id AND ol_d_id = :d_id AND
-				ol_w_id = :w_id;*/
 
-		/*EXEC_SQL UPDATE order_line
-		                SET ol_delivery_d = :datetime
-		                WHERE ol_o_id = :no_o_id AND ol_d_id = :d_id AND
-				ol_w_id = :w_id;*/
-```
 
-### New Order Trx
 
-```bash
-		/*EXEC_SQL INSERT INTO order_line (ol_o_id, ol_d_id, ol_w_id, 
-						 ol_number, ol_i_id, 
-						 ol_supply_w_id, ol_quantity, 
-						 ol_amount, ol_dist_info)
-			VALUES (:o_id, :d_id, :w_id, :ol_number, :ol_i_id,
-				:ol_supply_w_id, :ol_quantity, :ol_amount,
-				:ol_dist_info);*/
-```
