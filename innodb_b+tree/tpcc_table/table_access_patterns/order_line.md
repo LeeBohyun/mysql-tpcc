@@ -4,7 +4,7 @@
 - U(x): uniform access
 - A(x): x tuples are appended
 - P(x): x tuples are selected, which were recently accessed by other transactions (temporal locality)
-- 
+
 ## Order_Line Table
 - tpcc-mysql/create_table.sql
  ```bash
@@ -68,6 +68,7 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 			:ol_amount, :ol_delivery_d;*/
 ```
 ### Delivery Trx
+- p(100)
 - write: Update(100)
 - read: Select(100)
 ```bash
