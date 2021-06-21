@@ -1,5 +1,6 @@
 # Secondary Index Access in Order_Line Table
 ## Order_Line Table
+- tpcc-mysql/create_table.sql
  ```bash
 create table order_line (
 	ol_o_id int not null,
