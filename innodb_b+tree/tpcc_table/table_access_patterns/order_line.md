@@ -1,4 +1,10 @@
 # Secondary Index Access Patterns in Order_Line Table
+
+## Table Access Patterns:
+- U(x): uniform access
+- A(x): x tuples are appended
+- P(x): x tuples are selected, which were recently accessed by other transactions (temporal locality)
+- 
 ## Order_Line Table
 - tpcc-mysql/create_table.sql
  ```bash
