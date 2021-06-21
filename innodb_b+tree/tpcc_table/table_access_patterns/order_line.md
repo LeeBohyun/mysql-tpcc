@@ -1,4 +1,4 @@
-# Secondary Index Access Patterns in Order_Line Table
+# Access Patterns in Order_Line Table
 
 ## Table Access Patterns:
 - U(x): uniform access
@@ -39,7 +39,7 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 						       :ol_i_id,:ol_supply_w_id, NULL,
 						       :ol_quantity,:tmp_float,:ol_dist_info);*/
 ```
-## Run Benchmark
+## Running Benchmark
 
 ### New Order Trx
 - write: A(10)
@@ -54,6 +54,7 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 ```
 ### Order Status Trx
 - read: P(10)
+- read by secondary index
 
 ```bash
 	/*EXEC_SQL DECLARE c_items CURSOR FOR
@@ -79,6 +80,7 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 ```
 ### Stock Level Trx
 - read : P(200)
+- read by secondary index
 ```bash
 	/* find the most recent 20 orders for this district */
 	/*EXEC_SQL DECLARE ord_line CURSOR FOR
@@ -94,6 +96,8 @@ ALTER TABLE order_line ADD CONSTRAINT fkey_order_line_2 FOREIGN KEY(ol_supply_w_
 	EXEC SQL WHENEVER NOT FOUND GOTO done;*/
 ```
 
-
+## From the Point of Secondary Index B+Tree ...
+- nonclustered key inserted by new order trx and never updated
+- stock trx and order status reads from sec idx 
 
 
