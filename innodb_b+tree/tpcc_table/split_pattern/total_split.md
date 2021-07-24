@@ -19,3 +19,8 @@
 - Order-Line: 60GB -> 194GB
 - History: 6.7GB -> 17GB
 - Orders: 4.1GB -> 11GB
+
+## Page Free Space
+![ol-page-space](https://user-images.githubusercontent.com/55489991/126852515-fb80c77d-8aaa-4b47-ab3c-00eeb478ff15.png)
+
+- avg space util: 62%
