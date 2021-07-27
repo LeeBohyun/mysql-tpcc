@@ -21,6 +21,10 @@
 - Orders: 4.1GB -> 11GB
 
 ## Page Free Space
-![ol-page-space](https://user-images.githubusercontent.com/55489991/126852515-fb80c77d-8aaa-4b47-ab3c-00eeb478ff15.png)
 
+### Order-Line PK Leaf Page
+![ol-page-space](https://user-images.githubusercontent.com/55489991/126852515-fb80c77d-8aaa-4b47-ab3c-00eeb478ff15.png)
 - avg space util: 62%
+
+### Order-Line Secondary Index Leaf Page
+- avg util: 65%
