@@ -28,3 +28,12 @@
 
 ### Order-Line Secondary Index Leaf Page
 - avg util: 65%
+
+
+## Nonsplit Page Util
+
+### Order-Line PK Leaf Page
+- avg space util: 14896/16384
+
+### Order-Line Secondary Index Leaf Page
+- avg space util: 10804/16384
