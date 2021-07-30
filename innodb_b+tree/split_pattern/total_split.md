@@ -37,3 +37,10 @@
 
 ### Order-Line Secondary Index Leaf Page
 - avg space util: 10804/16384 65%
+
+### Experiment Result
+
+![ns_org_tps_size_per_time](https://user-images.githubusercontent.com/55489991/127618717-99438b22-cc3b-4e53-9611-365587a1bb9f.png)
+
+![ns_org_running_waf](https://user-images.githubusercontent.com/55489991/127618740-088674e4-8300-4664-bc29-4d9af9f18876.png)
+
