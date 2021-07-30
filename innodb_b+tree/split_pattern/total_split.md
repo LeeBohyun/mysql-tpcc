@@ -20,7 +20,7 @@
 - History: 6.7GB -> 17GB
 - Orders: 4.1GB -> 11GB
 
-## Page Free Space
+## Vanilla Page Free Space
 
 ### Order-Line PK Leaf Page
 ![ol-page-space](https://user-images.githubusercontent.com/55489991/126852515-fb80c77d-8aaa-4b47-ab3c-00eeb478ff15.png)
@@ -38,7 +38,7 @@
 ### Order-Line Secondary Index Leaf Page
 - avg space util: 10804/16384 65%
 
-### Experiment Result
+### Nonsplit Experiment Result
 
 ![ns_org_tps_size_per_time](https://user-images.githubusercontent.com/55489991/127618717-99438b22-cc3b-4e53-9611-365587a1bb9f.png)
 
