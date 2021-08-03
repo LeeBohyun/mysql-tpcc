@@ -49,9 +49,11 @@
 ### Org
 - secondary index page util: 66%
 - pk page util: 91%
-- 
-### Nonsplit only
 
+### Nonsplit only
+- secondary index page util: 66%
+- pk page util: 88%
+- 
 ### Redistribute(ol seconadary index only) + Nonsplit(10%)
 - secondary index page util: 83%
 - pk page util: 89%
