@@ -44,3 +44,10 @@
 
 ![ns_org_running_waf](https://user-images.githubusercontent.com/55489991/127618740-088674e4-8300-4664-bc29-4d9af9f18876.png)
 
+## AFTER DATA LOAD
+
+### Redistribute(ol seconadary index only) + Nonsplit(10%)
+- secondary index page util: 83%
+- pk page util: 89%
+
+
