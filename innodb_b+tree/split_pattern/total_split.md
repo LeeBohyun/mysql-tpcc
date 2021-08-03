@@ -46,7 +46,7 @@
 
 ## AFTER DATA LOAD
 
-### Org
+### Vanilla
 - secondary index page util: 66%
 - pk page util: 91%
 
