@@ -1,0 +1,20 @@
+# LinkBench Split Pattern in MySQL/InnoDB
+
+refer to https://github.com/meeeejin/til/blob/master/benchmark/summary-of-linkbench-for-mysql.md for linkbench summary
+
+## Split Pattern 
+
+### Nodetable
+- no secondary index
+- append only table
+- page space util over 90%
+
+### Counttable
+- page space util around 50%
+
+### Linktable
+- many secondary index
+- divided into 16 tables
+
+## Page Space Util per Table
+
