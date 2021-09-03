@@ -19,11 +19,11 @@ refer to https://github.com/meeeejin/til/blob/master/benchmark/summary-of-linkbe
 ## Page Space Util per Table
 
 ### Nodetable
-- total: 14765/16384
+- total: 14765/16384: 90%
 - no secondary index
 
 ### Counttable
-- total: 9649/16384
+- total: 9649/16384: 59%
 - no secondary index
 
 ### Linktable
