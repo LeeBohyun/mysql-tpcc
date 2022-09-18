@@ -63,6 +63,7 @@ echo "single page flush"
 grep -c "single page flush" mysql_error.log
 ```
 
-8. Investigate why the free buffer frames are acquired by these steps with the according ratio, step 1, step 2, and step 3 respectively. 
-Also, choose which step exacerbates the transaction throughput the most, and explain why.
+8. Submit the report with the following content.
+- Investigate why the free buffer frames are acquired by these steps with the according ratio, step 1, step 2, and step 3 respectively. 
+- Choose which step exacerbates the transaction throughput the most, and explain why.
 
