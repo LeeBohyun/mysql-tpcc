@@ -26,8 +26,8 @@ make -j install
 
 3. Modify my.cnf file with the following content.
 ```bash
-
-
+innodb_buffer_pool_size=100M
+innodb_buffer_pool_instances=8
 ```
 
 4. Reopen MySQL server
@@ -40,4 +40,10 @@ cd mysql-5.7.33
 ```bash
 cd /path/to/test-data
 cat mysql_error.log
+```
+
+6. Load and run TPC-C with 20 warehouses. 
+```bash
+cd tpcc-mysql
+
 ```
