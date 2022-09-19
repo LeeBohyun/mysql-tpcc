@@ -48,7 +48,7 @@ cat mysql_error.log
 6. Run TPC-C with 20 warehouses. If the number of CPU cores are more than 8, change the option c into # of cores *4.
 ```bash
 cd tpcc-mysql
-./tpcc_start ...
+./tpcc_start -h127.0.0.1 -S/tmp/mysql.sock -dtpcc -uroot -pyourPassword -w20 -c8 -r10 -l1200
 
 ```
 
