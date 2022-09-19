@@ -4,14 +4,20 @@
 - How does ```innodb_lru_scan_depth``` affect the operation method of buffer manager?
 - Hint: Use grep command to find the location of ```srv_LRU_scan_depth``` in ```mysql-5.7.33```.
 
-## How to Configure LRU scan depth
+
+## Experiment Guide
+### Configure LRU scan depth
 Modify ```my.cnf``` file and vary ```innodb_lru_scan_depth``` configuration variable : 128 256 512 1024 2048 4096 8192. Refer to the [mysql document](https://dev.mysql.com/doc/refman/5.7/en/innodb-parameters.html#sysvar_innodb_lru_scan_depth) for more information.
+
+### Run TPC-C benchmark
+Run TPC-C benchmark with the same configuration  with [week 4](https://github.com/LeeBohyun/mysql-tpcc/blob/master/buffer_manager/buffer_miss_scenario_monitoring.md) while monitoring IOPS and CPU utilization with ```iostat``` at the same time. Also, check the hit ratio and the ratio of step 1, 2, and 3 after benchmarking.
+
 
 ## Report Submission Guide
 
 - The report should include the following contents.
   - Summarize & analyze the ```innodb_lru_scan_depth```-related mysql source code (``buf0lru.cc``, ``buf0flu.cc``)
-  - How TpmC, read write IOPS, and hit ratio changes when varying ```innodb_lru_scan_depth```:128 256 512 1024 2048 4096 8192. (In a graph or a table)
+  - How TpmC, read write IOPS, and hit ratio changes when varying ```innodb_lru_scan_depth```:128 256 512 1024 2048 4096 8192.  (In a graph or a table)
   - How the ratio of Step 1, 2, 3 of the victim selection policy changes when varying ```innodb_lru_scan_depth```
   
 - The report should answer to the following questions.
