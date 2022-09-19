@@ -10,7 +10,7 @@
 - Measure the ratio of each step and investigate which step would be fatal to DBMS performance, and elaborate on the reason as well.
 
 ## How to add printf() in MySQL source 
-0.Load TPC-C data with 20 warehouses.
+0. Load TPC-C data with 20 warehouses.
 
 1. Add a fprintf code to ```mysql-5.7.33/storage/innobase/buf/buf0lru.cc```. Refer to the lecture pdf to figure out where to add the fprintf code.
 ```bash
