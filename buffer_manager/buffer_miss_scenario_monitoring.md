@@ -2,7 +2,10 @@
 
 ## LAB contents
 - When the foreground thread requests page read but the according page is not found in the buffer cafche, MySQL/InnoDB takes 3 steps to read a page from the disk.
- 
+
+ ![슬라이드10](https://user-images.githubusercontent.com/55489991/190937675-d7947a5d-9e33-473f-b595-4d4c2ec5a000.PNG)
+
+
 - This week, you are going to monitor how the victim page is selected upon buffer miss. 
 - Measure the ratio of each step and investigate which step would be fatal to DBMS performance, and elaborate on the reason as well.
 
