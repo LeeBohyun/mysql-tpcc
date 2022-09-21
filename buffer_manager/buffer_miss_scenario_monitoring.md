@@ -59,9 +59,9 @@ cd tpcc-mysql
 ```bash
 cd /path/to/test-data
 echo "total request" 
-grep -c "free block from free list" mysql_error.log
+grep -c "Get free block from free list" mysql_error.log
 echo "lru scan" 
-grep -c "lru scan" mysql_error.log
+grep -c "LRU scan" mysql_error.log
 echo "single page flush" 
 grep -c "single page flush" mysql_error.log
 ```
