@@ -28,11 +28,10 @@ cd mysql-5.7.33
 make -j install
 ```
 
-3. Modify my.cnf file with the following content.
+3. Modify my.cnf file with the following content. Only set ```innodb_buffer_pool_instances=8``` if buffer pool size is bigger than 1G.
 ```bash
 ...
 innodb_buffer_pool_size=100M
-innodb_buffer_pool_instances=8
 ...
 ```
 
