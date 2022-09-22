@@ -20,7 +20,7 @@ if (buf_pool->try_LRU_scan || n_iterations > 0) {
 
 ```
 
-- In ```buf_LRU_scan_and_free_block(buf_pool, n_iterations > 0)```,  ```buf_LRU_scan_and_free_block(buf_pool, n_iterations > 0)``` is called.
+- In ```buf_LRU_scan_and_free_block(buf_pool, n_iterations > 0)```,  ```buf_LRU_free_from_common_LRU_list()``` is called.
 
 ```bash
 UNIV_INTERN
@@ -234,7 +234,7 @@ Run TPC-C benchmark with the same configuration  with [week 4](https://github.co
   - Summarize & analyze the ```innodb_lru_scan_depth```-related mysql source code (``buf0lru.cc``, ``buf0flu.cc``)
   - How TpmC, read write IOPS, and hit ratio changes when varying ```innodb_lru_scan_depth```:128 256 512 1024 2048 4096 8192.  (In a graph or a table)
   - How the ratio of Step 1, 2, 3 of the victim selection policy changes when varying ```innodb_lru_scan_depth```
-  - The TpmC gap between the default ```innodb_lru_scan_depth (1024)``` and the ideal ```innodb_lru_scan_depth``
+  - The TpmC gap between the default ```innodb_lru_scan_depth (1024)``` and the ideal ```innodb_lru_scan_depth```
   
 - The report should answer to the following questions.
   - Question 1) How does ```innodb_lru_scan_depth``` affect the operation method of buffer manager? 
