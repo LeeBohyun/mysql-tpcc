@@ -232,7 +232,7 @@ Run TPC-C benchmark with the same configuration  with [week 4](https://github.co
 
 - The report should include the following contents.
   - Summarize & analyze the ```innodb_lru_scan_depth```-related mysql source code (``buf0lru.cc``, ``buf0flu.cc``)
-  - How TpmC, read write IOPS, and hit ratio changes when varying ```innodb_lru_scan_depth```:128 256 512 1024 2048 4096 8192.  (In a graph or a table)
+  - How TpmC and read write IOPS changes when varying ```innodb_lru_scan_depth```:128 256 512 1024 2048 4096 8192.  (In a graph or a table)
   - How the ratio of Step 1, 2, 3 of the victim selection policy changes when varying ```innodb_lru_scan_depth```
   - The TpmC gap between the default ```innodb_lru_scan_depth (1024)``` and the ideal ```innodb_lru_scan_depth```
   
