@@ -1,5 +1,10 @@
 # Project 1 Assignment: Finding the ideal LRU_scan_depth
 
+## UPATED INFO (2022.09.28)
+- use the following format for the report file name.: **studentid_name_PA1.pdf**
+- you don't have to include **hit ratio** for this project
+- The functionality of buf_LRU_free_from_unzip_LRU_list() and buf_LRU_free_from_common_LRU_list() is basically the same, so you can investigate just one or either of them.
+
 ## Implications of ```innodb_lru_scan_depth```
 - How does ```innodb_lru_scan_depth``` affect the operation method of buffer manager?
 - Hint: Use grep command to find the location of ```srv_LRU_scan_depth``` in ```mysql-5.7.33```.
@@ -41,60 +46,121 @@ buf_LRU_scan_and_free_block(
 
 ```
 
-- In ```buf_LRU_free_from_common_LRU_list()```,  look how ```srv_LRU_scan_depth``` is applied.
+- In ```buf_LRU_free_from_unzip_LRU_list()```,  look how ```srv_LRU_scan_depth``` is applied.
 ```bashrc
 UNIV_INLINE
 ibool
+static
+bool
+buf_LRU_free_from_unzip_LRU_list(
+/*=============================*/
+	buf_pool_t*	buf_pool,	/*!< in: buffer pool instance */
+	bool		scan_all)	/*!< in: scan whole LRU list
+					if true, otherwise scan only
+					srv_LRU_scan_depth / 2 blocks. */
+{
+	ut_ad(buf_pool_mutex_own(buf_pool));
+
+	if (!buf_LRU_evict_from_unzip_LRU(buf_pool)) {
+		return(false);
+	}
+
+	ulint	scanned = 0;
+	bool	freed = false;
+
+	for (buf_block_t* block = UT_LIST_GET_LAST(buf_pool->unzip_LRU);
+	     block != NULL
+	     && !freed
+	     && (scan_all || scanned < srv_LRU_scan_depth);
+	     ++scanned) {
+
+		buf_block_t*	prev_block;
+
+		prev_block = UT_LIST_GET_PREV(unzip_LRU, block);
+
+		ut_ad(buf_block_get_state(block) == BUF_BLOCK_FILE_PAGE);
+		ut_ad(block->in_unzip_LRU_list);
+		ut_ad(block->page.in_LRU_list);
+
+		freed = buf_LRU_free_page(&block->page, false);
+
+		block = prev_block;
+	}
+
+	if (scanned) {
+		MONITOR_INC_VALUE_CUMULATIVE(
+			MONITOR_LRU_UNZIP_SEARCH_SCANNED,
+			MONITOR_LRU_UNZIP_SEARCH_SCANNED_NUM_CALL,
+			MONITOR_LRU_UNZIP_SEARCH_SCANNED_PER_CALL,
+			scanned);
+	}
+
+	return(freed);
+}
+
+static
+bool
 buf_LRU_free_from_common_LRU_list(
 /*==============================*/
 	buf_pool_t*	buf_pool,	/*!< in: buffer pool instance */
-	ibool		scan_all)	/*!< in: scan whole LRU list
-					if TRUE, otherwise scan only
-					srv_LRU_scan_depth / 2 blocks. */
+	bool		scan_all)	/*!< in: scan whole LRU list
+					if true, otherwise scan only
+					up to BUF_LRU_SEARCH_SCAN_THRESHOLD */
 {
-	buf_page_t*	bpage;
-	ibool		freed;
-	ulint		scanned;
-
 	ut_ad(buf_pool_mutex_own(buf_pool));
 
-	
+	ulint		scanned = 0;
+	bool		freed = false;
 
-		for (bpage = UT_LIST_GET_LAST(buf_pool->LRU),
-			scanned = 1, freed = FALSE;
-			bpage != NULL && !freed
-			&& (scan_all || scanned < srv_LRU_scan_depth);
-			++scanned) {
+	for (buf_page_t* bpage = buf_pool->lru_scan_itr.start();
+	     bpage != NULL
+	     && !freed
+	     && (scan_all || scanned < BUF_LRU_SEARCH_SCAN_THRESHOLD);
+	     ++scanned, bpage = buf_pool->lru_scan_itr.get()) {
 
-			unsigned	accessed;
-			buf_page_t*	prev_bpage = UT_LIST_GET_PREV(LRU,
-							bpage);
+		buf_page_t*	prev = UT_LIST_GET_PREV(LRU, bpage);
+		BPageMutex*	mutex = buf_page_get_mutex(bpage);
 
-			ut_ad(buf_page_in_file(bpage));
-			ut_ad(bpage->in_LRU_list);
+		buf_pool->lru_scan_itr.set(prev);
 
-			accessed = buf_page_is_accessed(bpage);
+		mutex_enter(mutex);
+
+		ut_ad(buf_page_in_file(bpage));
+		ut_ad(bpage->in_LRU_list);
+
+		unsigned	accessed = buf_page_is_accessed(bpage);
+
+		if (buf_flush_ready_for_replace(bpage)) {
+			mutex_exit(mutex);
 			freed = buf_LRU_free_page(bpage, true);
-			if (freed && !accessed) {
-				/* Keep track of pages that are evicted without
-				ever being accessed. This gives us a measure of
-				the effectiveness of readahead */
-				++buf_pool->stat.n_ra_pages_evicted;
-			}
-
-			bpage = prev_bpage;
+		} else {
+			mutex_exit(mutex);
 		}
 
+		if (freed && !accessed) {
+			/* Keep track of pages that are evicted without
+			ever being accessed. This gives us a measure of
+			the effectiveness of readahead */
+			++buf_pool->stat.n_ra_pages_evicted;
+		}
+
+		ut_ad(buf_pool_mutex_own(buf_pool));
+		ut_ad(!mutex_own(mutex));
+	}
+
+	if (scanned) {
 		MONITOR_INC_VALUE_CUMULATIVE(
 			MONITOR_LRU_SEARCH_SCANNED,
 			MONITOR_LRU_SEARCH_SCANNED_NUM_CALL,
 			MONITOR_LRU_SEARCH_SCANNED_PER_CALL,
 			scanned);
+	}
 
 	return(freed);
 }
-
 ```
+
+
 ### ```srv_LRU_scan_depth``` in ```buf0flu.cc```
 - ```buf_do_LRU_batch()``` is called by page cleaner thread (```pc_flush_slot()```).
 
