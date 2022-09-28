@@ -3,7 +3,7 @@
 ## UPATED INFO (2022.09.28)
 - use the following format for the report file name.: **studentid_name_PA1.pdf**
 - you don't have to include **hit ratio** for this project
-- The functionality of buf_LRU_free_from_unzip_LRU_list() and buf_LRU_free_from_common_LRU_list() is basically the same, so you can investigate just one or either of them.
+- buf_LRU_free_from_common_LRU_list() -> buf_LRU_free_from_unzip_LRU_list() buf_LRU_free_from_common_LRU_list()
 
 ## Implications of ```innodb_lru_scan_depth```
 - How does ```innodb_lru_scan_depth``` affect the operation method of buffer manager?
