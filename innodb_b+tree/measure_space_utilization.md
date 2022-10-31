@@ -20,8 +20,48 @@ $ sudo gem install innodb_ruby -v 0.9.16
 ### 2. Load & Run TPC-C data with the following options.
 
 Refer to the week 2 for TPC-C/MySQL testing guide.
+
+-Change `load.sh`:
+Before running the script, change `LD_LIBRARY_PATH` and enter `yourPassword` in the `load.sh` file:
+
 ```bash
-./load.sh tpcc 20
+$ cd tpcc-mysql
+$ vi load.sh
+
+export LD_LIBRARY_PATH=/home/lbh/mysql-5.7.24/lib
+DBNAME=$1
+WH=$2
+HOST=127.0.0.1
+STEP=100
+
+./tpcc_load -h $HOST -d $DBNAME -u root -p "yourPassword" -P3306 -w $WH -l 1 -m 1 -n $WH >> 1.out &
+x=1
+
+while [ $x -le $WH ]
+do
+ echo $x $(( $x + $STEP - 1 ))
+./tpcc_load -h $HOST -d $DBNAME -u root -p "yourPassword" -P3306 -w $WH -l 2 -m $x -n $(( $x + $STEP - 1 ))  >> 2_$x.out &
+./tpcc_load -h $HOST -d $DBNAME -u root -p "yourPassword" -P3306 -w $WH -l 3 -m $x -n $(( $x + $STEP - 1 ))  >> 3_$x.out &
+./tpcc_load -h $HOST -d $DBNAME -u root -p "yourPassword" -P3306 -w $WH -l 4 -m $x -n $(( $x + $STEP - 1 ))  >> 4_$x.out &
+ x=$(( $x + $STEP ))
+done
+
+for pid in `jobs -p`
+do
+	echo wait for $pid
+	wait $pid
+done
+
+$ sudo chmod 777 load.sh
+```
+
+- Load data:
+
+```bash
+$ ./load.sh tpcc 20
+```
+- Run TPC-C Benchmark:
+```bash
 ./tpcc_start -h 127.0.0.1 -S /tmp/mysql.sock -d tpcc -u root -p "yourPassword" -w 20 -c 8 -r 10 -l 1200 
 
 ```
