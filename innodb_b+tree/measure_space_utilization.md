@@ -53,10 +53,7 @@ I recommend you to use ```awk``` for this task. Refer to this link for ```awk```
 ### 4. Calculate Space Amplification Factor
 
 - Space amplification  = tpcc DB size / user data size
-You can get TPC-C DB size by the following command.
-```bash
-$ du -sh /path/to/test_data/tpcc/
-```
+- Total DB size = number of pages * 16K
 
 # References
 - https://blog.jcole.us/2013/01/03/a-quick-introduction-to-innodb-ruby/
