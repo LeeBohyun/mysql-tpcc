@@ -85,6 +85,7 @@ $ sudo apt-get install build-essential cmake libncurses5 libncurses5-dev bison
 
 ```bash
 $ wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.24.tar.gz
+$ wget https://downloads.mysql.com/archives/get/p/23/file/mysql-5.6.26.tar.gz
 ```
 
 - Extract the `mysql-5.7.24.tar.gz` file:
