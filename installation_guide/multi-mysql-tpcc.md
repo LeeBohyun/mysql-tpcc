@@ -303,3 +303,20 @@ Where:
 ### REFERENCE
 - https://github.com/Percona-Lab/tpcc-mysql
 - https://github.com/meeeejin/til
+
+
+## Error Handling
+
+- No shared library libsomysql...related
+```bash
+# cat /etc/ld.so.conf
+include ld.so.conf.d/*.conf
+/home/lbh/mysql-5.6.26/ <— add 
+
+$ ldconfig
+
+# vim /root/.bash_profile
+export PATH=/home/lbh/mysql-5.6.26/lib/
+
+$source /root/.bash_profile
+```
