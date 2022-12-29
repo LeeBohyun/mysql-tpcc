@@ -182,7 +182,7 @@ $ ./bin/mysqld_safe --defaults-file=/home/lbh/my.cnf
 $ ./bin/mysql -uroot -pyourPassword -S/tmp/mysql.sock -P3306
 ```
 
-## How to install tpcc-mysql
+## How to install TPC-C benchmark
 
 ### Installation
 
