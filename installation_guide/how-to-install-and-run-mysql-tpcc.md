@@ -93,7 +93,7 @@ $ wget https://downloads.mysql.com/archives/get/p/23/file/mysql-5.6.26.tar.gz
 
 ```bash
 $ tar -xvzf mysql-5.7.24.tar.gz
-$ cd mysql-5.7.27
+$ cd mysql-5.7.24
 ```
 
 - Download BOOST library to build MySQL:
