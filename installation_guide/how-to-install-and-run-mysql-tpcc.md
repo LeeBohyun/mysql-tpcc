@@ -71,6 +71,7 @@ $ sudo apt-get install libreadline6 libreadline6-dev
 
 ```bash
 $ sudo apt-get install libaio1 libaio-dev
+$ sudo apt install libssl-dev
 ```
 
 - etc.
