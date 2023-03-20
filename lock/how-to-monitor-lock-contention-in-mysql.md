@@ -5,6 +5,7 @@
 - Drilldown the lock contentcion to find out which TPC-C transaction worsens the tail latency 
 
 ## Instructions
+
 1. Add the lines below in ``my.cnf`` file
 ```bash
 innodb_monitor_enable = module_index
@@ -17,10 +18,13 @@ performance-schema-consumer-events-transactions-current=ON
 performance-schema-consumer-events-transactions-history=ON
 performance-schema-consumer-events-transactions-history-long=ON
 ```
-2. Start MySQL server (you can use the command below to run mysql server in the background)and run the TPC-C benchmark
+- Set the ``innodb_buffer_pool_size`` variable into 20% of your DB size
+
+
+2. Start MySQL server (you can use the command below to run mysql server in the background) and run the TPC-C benchmark
 ```bash
 $ ./bin/mysqld --defaults-file=/path/to/my.cnf & >/dev/null &disown 
-$ ./tpcc_start -h127.0.0.1 -S/tmp/mysql.sock -P3306 -dtpcc1000 -uroot -pxxxxxx -w1000 -c32 -r10 -l900 | tee tpcc_result.out
+$ ./tpcc_start -h127.0.0.1 -S/tmp/mysql.sock -P3306 -dtpcc1000 -uroot -pxxxxxx -w1000 -c32 -r10 -l1800 | tee tpcc_result.out
 ```
 
 3. While running the TPC-C benchmark, execute ``iostat`` and ``monitor_mysql.sh`` file 
